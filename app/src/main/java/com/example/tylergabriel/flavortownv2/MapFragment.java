@@ -18,6 +18,8 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import org.json.JSONObject;
+
 import static com.google.ads.AdRequest.LOGTAG;
 
 
@@ -29,17 +31,18 @@ import static com.google.ads.AdRequest.LOGTAG;
  * Use the {@link MapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
+
 public class MapFragment extends SupportMapFragment implements OnMapReadyCallback {
 
     private static final String LOGTAG = "MapFragment";
     private GoogleMap mMap;
+    private static String gpURL = "https://maps.googleapis.com/maps/api/place/details/json?&key=AIzaSyDU5KCvghYUqvJdkMY7OBo2mr8jsAEvHqY";
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getMapAsync(this);
     }
-
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
@@ -49,6 +52,16 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
         Log.v(LOGTAG, "Added Sydney");
+    }
+
+    public void validPlace(JSONObject placeInQuestion)
+    {
+
+    }
+    public void getPlace()
+    {
+
+
     }
 
 /*
