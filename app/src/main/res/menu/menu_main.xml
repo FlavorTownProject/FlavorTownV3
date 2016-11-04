@@ -3,8 +3,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="com.example.tylergabriel.flavortownv2.MainActivity">
     <item
-        android:id="@+id/action_settings"
+        android:title="Test Button"
         android:orderInCategory="100"
+        android:id="@+id/testButton" />
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="101"
         android:title="@string/action_settings"
         app:showAsAction="never" />
 </menu>
