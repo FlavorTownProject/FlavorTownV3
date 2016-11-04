@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import com.google.android.gms.location.places.Place;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private ViewPager mViewPager;
 
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -138,10 +140,13 @@ public class MainActivity extends AppCompatActivity {
             switch(position)
             {
                 case 0:
-                    fragment = new MenuFragment();
+                    fragment = PlaceholderFragment.newInstance(position+1);
+                    //fragment = new MenuFragment();
                     break;
                 case 1:
-                    fragment = new SearchBarFragment();
+                    fragment = PlaceholderFragment.newInstance(position+1);
+
+                    //fragment = new SearchBarFragment();
                     break;
                 case 2:
                     fragment = new MapFragment();
