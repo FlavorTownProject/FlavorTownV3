@@ -11,4 +11,12 @@
         android:layout_height="match_parent"
         android:text="@string/hello_blank_fragment" />
 
+    <Button
+        android:text="Button"
+        android:layout_width="99dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/openPP"
+        android:layout_gravity="center"
+        android:elevation="1dp" />
+
 </FrameLayout>

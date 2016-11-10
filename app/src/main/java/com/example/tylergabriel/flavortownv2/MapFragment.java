@@ -1,16 +1,26 @@
 package com.example.tylergabriel.flavortownv2;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -20,6 +30,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONObject;
 
+import static android.app.Activity.RESULT_OK;
 import static com.google.ads.AdRequest.LOGTAG;
 
 
@@ -32,13 +43,71 @@ import static com.google.ads.AdRequest.LOGTAG;
  * create an instance of this fragment.
  */
 
-public class MapFragment extends SupportMapFragment implements OnMapReadyCallback {
+public class MapFragment extends SupportMapFragment{ //extends SupportMapFragment implements OnMapReadyCallback
 
+    private Button openPlacePicker;
     private static final String LOGTAG = "MapFragment";
     private GoogleMap mMap;
     private static String gpURL = "https://maps.googleapis.com/maps/api/place/details/json?&key=AIzaSyDU5KCvghYUqvJdkMY7OBo2mr8jsAEvHqY";
 
+    int PLACE_PICKER_REQUEST = 1;
+
+
+    public void onCreate(Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        /*}
+        catch (GooglePlayServicesRepairableException e) {
+            e.printStackTrace();
+        }
+        catch (GooglePlayServicesNotAvailableException e){
+            e.printStackTrace();
+        }*/
+
+
+    }
+
+    protected void onActviityResult(int requestCode, int resultCode, Intent data)
+    {
+        if(requestCode == PLACE_PICKER_REQUEST)
+        {
+            if(resultCode==RESULT_OK)
+            {
+                Place place = PlacePicker.getPlace(data,getContext());
+                String address = String.format("Place: %s", place.getAddress());
+                Log.d("DEBUG", "address = " + address);
+            }
+        }
+    }
+
     @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        View v = inflater.inflate(R.layout.fragment_map, container, false);
+        openPlacePicker = (Button) v.findViewById(R.id.openPP);
+
+        openPlacePicker.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+
+                //try{
+                //startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
+                //Intent intent = new Intent(this.getContext(), PlacePicker.class);
+                try {
+                    Intent intent = builder.build(getActivity());
+                    startActivityForResult(intent, PLACE_PICKER_REQUEST);
+                } catch (GooglePlayServicesRepairableException e) {
+                    e.printStackTrace();
+                } catch (GooglePlayServicesNotAvailableException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        return v;
+    }
+    /* Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         getMapAsync(this);
@@ -48,21 +117,13 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         mMap = googleMap;
         Log.v(LOGTAG, "map is ready");
 
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-        Log.v(LOGTAG, "Added Sydney");
+        LatLng dennyChimes = new LatLng(33.209896, -87.546315);
+        mMap.addMarker(new MarkerOptions().position(dennyChimes).title("Denny Chimes"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(dennyChimes));
+        Log.v(LOGTAG, "Denny Chimes");
     }
+*/
 
-    public void validPlace(JSONObject placeInQuestion)
-    {
-
-    }
-    public void getPlace()
-    {
-
-
-    }
 
 /*
     // TODO: Rename parameter arguments, choose names that match
@@ -151,11 +212,11 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
      * >Communicating with Other Fragments</a> for more information.
      */
 
-/*
+
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
-    */
+
 
 }
