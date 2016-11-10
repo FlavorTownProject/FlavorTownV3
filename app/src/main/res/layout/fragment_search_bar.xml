@@ -5,9 +5,27 @@
     tools:context="com.example.tylergabriel.flavortownv2.SearchBarFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <Button
+        android:text="Search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/SearchButton"
+        android:layout_gravity="top|right" />
+
+    <EditText
+        android:layout_width="294dp"
+        android:layout_height="wrap_content"
+        android:inputType="textPersonName"
+        android:text="Name"
+        android:ems="10"
+        android:id="@+id/SearchBar"
+        android:layout_gravity="top" />
+
+    <ListView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="464dp"
+        android:id="@+id/restaurantList"
+        android:layout_gravity="bottom" />
 
 </FrameLayout>

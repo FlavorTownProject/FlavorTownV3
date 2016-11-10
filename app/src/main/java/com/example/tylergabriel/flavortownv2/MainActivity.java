@@ -144,9 +144,9 @@ public class MainActivity extends AppCompatActivity {
                     //fragment = new MenuFragment();
                     break;
                 case 1:
-                    fragment = PlaceholderFragment.newInstance(position+1);
+                   // fragment = PlaceholderFragment.newInstance(position+1);
 
-                    //fragment = new SearchBarFragment();
+                    fragment = new SearchBarFragment();
                     break;
                 case 2:
                     fragment = new MapFragment();
