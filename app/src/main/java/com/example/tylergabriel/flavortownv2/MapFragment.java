@@ -14,10 +14,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.places.AutocompleteFilter;
 import com.google.android.gms.location.places.Place;
 import com.google.android.gms.location.places.ui.PlacePicker;
 import com.google.android.gms.location.places.ui.SupportPlaceAutocompleteFragment;
@@ -30,6 +32,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONObject;
 
+import java.util.List;
+
 import static android.app.Activity.RESULT_OK;
 import static com.google.ads.AdRequest.LOGTAG;
 
@@ -37,17 +41,22 @@ import static com.google.ads.AdRequest.LOGTAG;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link MapFragment.OnFragmentInteractionListener} interface
+ * {@link OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link MapFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 
-public class MapFragment extends SupportMapFragment{ //extends SupportMapFragment implements OnMapReadyCallback
+public class MapFragment extends Fragment{ //extends SupportMapFragment implements OnMapReadyCallback
 
     private Button openPlacePicker;
+    private TextView placeName;
+    private TextView placeLon;
+    private TextView placeLat;
+    private TextView placeTag;
+
     private static final String LOGTAG = "MapFragment";
-    private GoogleMap mMap;
+    //private GoogleMap mMap;
     private static String gpURL = "https://maps.googleapis.com/maps/api/place/details/json?&key=AIzaSyDU5KCvghYUqvJdkMY7OBo2mr8jsAEvHqY";
 
     int PLACE_PICKER_REQUEST = 1;
@@ -67,15 +76,35 @@ public class MapFragment extends SupportMapFragment{ //extends SupportMapFragmen
 
     }
 
-    protected void onActviityResult(int requestCode, int resultCode, Intent data)
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data)
     {
         if(requestCode == PLACE_PICKER_REQUEST)
         {
             if(resultCode==RESULT_OK)
             {
-                Place place = PlacePicker.getPlace(data,getContext());
-                String address = String.format("Place: %s", place.getAddress());
-                Log.d("DEBUG", "address = " + address);
+                Place place = PlacePicker.getPlace(getContext(), data);//getPlace(data,getContext());
+                String name = String.format("Place: %s", place.getName());
+                String lon = String.format("Lon: %s", place.getLatLng());
+                String tags = "Tags = None of importance";
+                List<Integer> tagResults = place.getPlaceTypes();
+                while(!tagResults.isEmpty())
+                {
+                    if(tagResults.get(0) == 38)
+                    {
+                        tags = "Tags = Food";
+                        tagResults.clear();
+                    }
+                    else
+                    {
+                        tagResults.remove(0);
+                    }
+                }
+
+                Log.d("DEBUG", "Name = " + name);
+                placeName.setText(name);
+                placeLon.setText(lon);
+                placeTag.setText(tags);
             }
         }
     }
@@ -86,10 +115,16 @@ public class MapFragment extends SupportMapFragment{ //extends SupportMapFragmen
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_map, container, false);
         openPlacePicker = (Button) v.findViewById(R.id.openPP);
+        placeName = (TextView) v.findViewById(R.id.placeNameView);
+        placeLon = (TextView) v.findViewById(R.id.placeLonView);
+        placeLat = (TextView) v.findViewById(R.id.placeLatView);;
+        placeTag = (TextView) v.findViewById(R.id.placeTagView);;
+
 
         openPlacePicker.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
+
                 PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
 
                 //try{
@@ -97,12 +132,16 @@ public class MapFragment extends SupportMapFragment{ //extends SupportMapFragmen
                 //Intent intent = new Intent(this.getContext(), PlacePicker.class);
                 try {
                     Intent intent = builder.build(getActivity());
+                    //AutocompleteFilter typeFilter = new AutocompleteFilter.Builder().setTypeFilter(AutocompleteFilter.TYPE_FILTER_ESTABLISHMENT).build();
+                    //intent.setF
                     startActivityForResult(intent, PLACE_PICKER_REQUEST);
+
                 } catch (GooglePlayServicesRepairableException e) {
                     e.printStackTrace();
                 } catch (GooglePlayServicesNotAvailableException e) {
                     e.printStackTrace();
                 }
+
             }
         });
         return v;

@@ -19,4 +19,36 @@
         android:layout_gravity="center"
         android:elevation="1dp" />
 
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/placeNameView"
+        android:layout_gravity="center"
+        android:layout_marginBottom="200dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/placeLonView"
+        android:layout_gravity="center"
+        android:layout_marginBottom="175dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/placeLatView"
+        android:layout_marginBottom="150dp"
+        android:layout_gravity="center" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/placeTagView"
+        android:layout_gravity="center"
+        android:layout_marginBottom="100dp" />
+
 </FrameLayout>
