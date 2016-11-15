@@ -1,7 +1,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.example.tylergabriel.flavortownv2.MainActivity">
+    tools:context="com.example.tylergabriel.flavortownv2.cs.example.tylergabriel.flavortownv2.MainActivity">
     <item
         android:title="Test Button"
         android:orderInCategory="100"

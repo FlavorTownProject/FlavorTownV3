@@ -1,4 +1,4 @@
-package com.example.tylergabriel.flavortownv2;
+package cs.ua.edu.flavortown;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

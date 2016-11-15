@@ -1,5 +1,4 @@
-package com.example.tylergabriel.flavortownv2;
-import java.util.stream.*;
+package cs.ua.edu.flavortown;
 
 public class DataController {
     public int method(){

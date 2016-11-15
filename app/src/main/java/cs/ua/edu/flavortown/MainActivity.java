@@ -1,4 +1,4 @@
-package com.example.tylergabriel.flavortownv2;
+package cs.ua.edu.flavortown;
 
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -18,8 +18,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.TextView;
-
-import com.google.android.gms.location.places.Place;
 
 
 public class MainActivity extends AppCompatActivity {
