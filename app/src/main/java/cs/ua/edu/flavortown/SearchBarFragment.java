@@ -1,15 +1,19 @@
 package cs.ua.edu.flavortown;
 
+import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 
 /**
@@ -68,10 +72,13 @@ public class SearchBarFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_search_bar, container, false);
         final EditText SearchBar = (EditText) v.findViewById(R.id.SearchBar);
         final Button SearchButton = (Button)  v.findViewById(R.id.SearchButton);
-
+        final TextView a = new TextView(getContext());
         final ListView restaurantList = (ListView) v.findViewById(R.id.restaurantList);
-        String[] cars = {"A","B","C","A","B","C","A","B","C","A","B","C"};
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(),android.R.layout.simple_list_item_1,cars);
+        String[] displayItems = databaseReturn();
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(),android.R.layout.simple_list_item_2,displayItems);
+        final ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this.getContext(),android.R.layout.two_line_list_item,displayItems);
+        //ArrayList<ListEntry> items = new ArrayList<ListEntry>();
+
         //^ TODO: should this be final???
 
         SearchButton.setOnClickListener(new View.OnClickListener() {
@@ -81,14 +88,28 @@ public class SearchBarFragment extends Fragment {
 
             }
         });
+        restaurantList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            //@Override
+            public  void onItemClick(AdapterView<?> parent,View v,int position, long id){
+                //Object a = restaurantList.getSelectedItem();
+                String a = (String) parent.getItemAtPosition(position);
+                System.out.println(a);
+            }
 
+
+        });
 
 
 
         return v;
         //return inflater.inflate(R.layout.fragment_search_bar, container, false);
     }
+    public String[] databaseReturn(){
 
+        //Todo: add database query that inserts data into the array
+        String[] a  = {"Burger A","Burger B","Burger C","Burger D","Burger E","Burger F","Burger G"};
+        return a;
+    }
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
