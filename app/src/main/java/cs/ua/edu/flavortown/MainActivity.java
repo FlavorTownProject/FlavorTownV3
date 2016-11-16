@@ -138,8 +138,10 @@ public class MainActivity extends AppCompatActivity {
             switch(position)
             {
                 case 0:
-                    fragment = PlaceholderFragment.newInstance(position+1);
+                    //fragment = PlaceholderFragment.newInstance(position+1);
                     //fragment = new MenuFragment();
+
+                    fragment = new MainFragment();
                     break;
                 case 1:
                    // fragment = PlaceholderFragment.newInstance(position+1);
