@@ -14,24 +14,11 @@
         android:layout_height="wrap_content" />
 
     <Button
-<<<<<<< HEAD
         android:text="Database Sample"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="21dp"
-        android:layout_marginStart="21dp"
-        android:id="@+id/DBtest"
-        android:layout_below="@+id/section_label"
-        android:layout_toRightOf="@+id/section_label"
-        android:layout_toEndOf="@+id/section_label" />
-=======
-        android:text="Test Database"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="11dp"
-        android:id="@+id/RateButton"
+        android:id="@+id/DatabaseButton"
         android:layout_below="@+id/section_label"
         android:layout_centerHorizontal="true" />
->>>>>>> dbintegrate
 
 </RelativeLayout>

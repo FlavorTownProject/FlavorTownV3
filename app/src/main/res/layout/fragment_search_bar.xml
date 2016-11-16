@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.tylergabriel.flavortownv2.cs.example.tylergabriel.flavortownv2.SearchBarFragment">
+    tools:context="cs.ua.edu.flavortown.SearchBarFragment">
 
     <!-- TODO: Update blank fragment layout -->
 

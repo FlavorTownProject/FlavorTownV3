@@ -192,11 +192,7 @@ public class MainActivity extends AppCompatActivity {
             switch (position) {
                 case 0:
                     //fragment = PlaceholderFragment.newInstance(position+1);
-<<<<<<< HEAD
-=======
-                    //fragment = new MenuFragment();
 
->>>>>>> dbintegrate
                     fragment = new MainFragment();
                     break;
                 case 1:
