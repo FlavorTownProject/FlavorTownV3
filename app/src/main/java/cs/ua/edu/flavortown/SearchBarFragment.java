@@ -13,7 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 /**
@@ -29,6 +32,7 @@ public class SearchBarFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+    private boolean checked; //false = restaurant true = food
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -69,17 +73,39 @@ public class SearchBarFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View v = inflater.inflate(R.layout.fragment_search_bar, container, false);
+        final View v = inflater.inflate(R.layout.fragment_search_bar, container, false);
         final EditText SearchBar = (EditText) v.findViewById(R.id.SearchBar);
         final Button SearchButton = (Button)  v.findViewById(R.id.SearchButton);
-        final TextView a = new TextView(getContext());
+        //final TextView a = new TextView(getContext());
         final ListView restaurantList = (ListView) v.findViewById(R.id.restaurantList);
         String[] displayItems = databaseReturn();
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(),android.R.layout.simple_list_item_2,displayItems);
+        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(),android.R.layout.simple_list_item_1,displayItems);
         final ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this.getContext(),android.R.layout.two_line_list_item,displayItems);
         //ArrayList<ListEntry> items = new ArrayList<ListEntry>();
+        final RadioGroup radioGroup = (RadioGroup) v.findViewById(R.id.radioGroup);
 
-        //^ TODO: should this be final???
+        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
+        {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+
+                RadioButton rb =(RadioButton) v.findViewById(checkedId);
+                int index = radioGroup.indexOfChild(rb);
+                switch (index) {
+                    case 0: // Restaurant
+                        checked = false;
+                        Toast.makeText(v.getContext(), "Selected button  " + rb.getText(),  Toast.LENGTH_SHORT).show();
+                        break;
+                    case 1: // FOOD
+                        checked = true;
+                        Toast.makeText(v.getContext(), "Selected button  " + rb.getText(),  Toast.LENGTH_SHORT).show();
+                        break;
+                }
+
+
+            }
+        });
+
 
         SearchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
@@ -88,12 +114,16 @@ public class SearchBarFragment extends Fragment {
 
             }
         });
+
+
+
         restaurantList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             //@Override
             public  void onItemClick(AdapterView<?> parent,View v,int position, long id){
                 //Object a = restaurantList.getSelectedItem();
-                String a = (String) parent.getItemAtPosition(position);
-                System.out.println(a);
+                String a =  (String) parent.getItemAtPosition(position);
+
+                Toast.makeText(v.getContext(), a, Toast.LENGTH_SHORT).show();
             }
 
 
@@ -104,6 +134,23 @@ public class SearchBarFragment extends Fragment {
         return v;
         //return inflater.inflate(R.layout.fragment_search_bar, container, false);
     }
+
+    public void onRadioButtonClicked(View view) {
+        // Is the button now checked?
+        boolean checked = ((RadioButton) view).isChecked();
+
+        // Check which radio button was clicked
+        switch(view.getId()) {
+            case R.id.radioRestaurant:
+                if (checked)
+                    break;
+            case R.id.radioFood:
+                if (checked)
+                    break;
+        }
+    }
+
+
     public String[] databaseReturn(){
 
         //Todo: add database query that inserts data into the array
