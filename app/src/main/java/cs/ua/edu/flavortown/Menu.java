@@ -4,7 +4,7 @@ public class Menu {
     public Menu() {
         // empty default constructor, necessary for Firebase to be able to deserialize blog posts
     }
-    public long getFoodList() {
+    public Food[] getFoodList() {
         return foodList;
     }
 

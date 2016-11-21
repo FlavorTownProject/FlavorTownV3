@@ -13,7 +13,7 @@ public class RestaurantInfo {
     public double getLongitude() {
         return longitude;
     }
-    public long getRestName() {
+    public String getRestName() {
         return restName;
     }
     public Menu getMenu(){
