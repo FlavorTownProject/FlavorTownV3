@@ -1,3 +1,4 @@
+package cs.ua.edu.flavortown;
 public class Menu {
     Food[] foodList;
 
