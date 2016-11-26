@@ -56,11 +56,11 @@ import static android.content.Context.LOCATION_SERVICE;
 
 
 
-public class MapFragment extends SupportMapFragment implements OnMapReadyCallback {
+public class MapFragment extends SupportMapFragment implements OnMapReadyCallback,GoogleMap.OnMyLocationButtonClickListener {
 
     private static final String LOGTAG = "MapFragment";
     private GoogleMap mMap;
-    private static String gpURL = "https://maps.googleapis.com/maps/api/place/textsearch/json?&key=AIzaSyDZzxLsGBZ2aefPmsyGzpdB63OVpvc8PNY&query=hamburger";//AIzaSyDU5KCvghYUqvJdkMY7OBo2mr8jsAEvHqY";
+    private static String gpURL = "https://maps.googleapis.com/maps/api/place/textsearch/json?&key=AIzaSyDZzxLsGBZ2aefPmsyGzpdB63OVpvc8PNY&query=hamburgers";//AIzaSyDU5KCvghYUqvJdkMY7OBo2mr8jsAEvHqY";
     static String detailURL = "https://maps.googleapis.com/maps/api/place/details/json?&key=AIzaSyDZzxLsGBZ2aefPmsyGzpdB63OVpvc8PNY";
 
     private JSONObject jsonIDS;
@@ -113,7 +113,8 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         mMap = googleMap;
         Log.v(LOGTAG, "map is ready");
 
-        if (ContextCompat.checkSelfPermission(getContext(), ACCESS_FINE_LOCATION) == 1) {
+        if (ContextCompat.checkSelfPermission(getActivity(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            Log.v(LOGTAG, "My Location Enabled");
             mMap.setMyLocationEnabled(true);
         }
         if (gpsManager == null)
@@ -150,6 +151,8 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         Log.v(LOGTAG, "Thread started");
 
     }
+
+
 
     private void addMarkers(){
         Log.v("addMarkers", "List length ="+ String.valueOf(restaurants.length));
@@ -265,141 +268,11 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         return baseURL.concat("&placeid=".concat(placeID));
     }
 
+    @Override
+    public boolean onMyLocationButtonClick() {
+        Log.v("LocationButtonClick", "Button Clicked");
+        LatLng currentLocation = new LatLng(gpsManager.getLatitude(),gpsManager.getLongitude());
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        return true;
+    }
 }//end of MapFragment
-
-/*
-class GPSManager extends Service implements LocationListener {
-
-
-    public static float updateDistance = 10; // goes by meters
-    public static final long minTimeBetweenUpdates = 1000 * 60; //Goes by ms, so 1000*60 is 1 minute.
-    LocationManager locationManager;
-    boolean canGetLocation;
-
-
-    private final Context context;
-    private Location location;
-    private double latitude;
-    private double longitude;
-    private android.location.LocationListener locationListener = new android.location.LocationListener() {
-        @Override
-        public void onLocationChanged(Location location) {
-
-        }
-        @Override
-        public void onStatusChanged(String s, int i, Bundle bundle) {
-
-        }
-
-        @Override
-        public void onProviderEnabled(String s) {
-
-        }
-
-        @Override
-        public void onProviderDisabled(String s) {
-
-        }
-    };
-
-    public GPSManager (Context context) {
-        Log.v("GPSManager","Initialzing");
-        this.context = context;
-        location = getLocation();
-        Log.v("GPSManager","Initialized");
-    }
-
-    public Location getLocation() {
-        boolean isGPSEnabled;
-        boolean isNetworkEnabled;
-        try {
-            Log.v("GPSManager","Attempting getLocation");
-            locationManager = (LocationManager) getApplicationContext().getSystemService(getApplicationContext().LOCATION_SERVICE);
-            isGPSEnabled = locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
-            isNetworkEnabled = locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
-            if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-                if (!isGPSEnabled && isNetworkEnabled) {
-                    Log.v("GPSManager","Both GPS and Network are disabled");
-                } else {
-                    Log.v("GPSManager","Either GPS or Network is enabled");
-                    this.canGetLocation = true;
-                    if (isNetworkEnabled) {
-                        Log.v("GPSManager","Network is enabled");
-                        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, minTimeBetweenUpdates, updateDistance, locationListener); //(LocationManager.NETWORK_PROVIDER, (long) minTimeBetweenUpdates,(float) updateDistance, locationListener);
-                        if(locationManager != null) {
-                            location = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                            if(location != null) {
-                                latitude = location.getLatitude();
-                                longitude = location.getLongitude();
-                            }//end of if(location != null)
-                        }//end of if(locationManager !=null)
-                    }//end of if(isNetworkEnabled)
-                    if(isGPSEnabled) {
-                        Log.v("GPSManager","GPS is enabled");
-                        if(location == null) {
-                            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER , minTimeBetweenUpdates, updateDistance, locationListener);
-                            if(locationManager != null) {
-                                location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                                if(location != null) {
-                                    latitude = location.getLatitude();
-                                    longitude = location.getLongitude();
-                                }
-                            }
-                        }
-                    }//end of if(isGPSEnabled)
-                }
-            }
-
-        } catch (Exception e) {
-            Log.v("GPSManager","Hit exception");
-            e.printStackTrace();
-        }
-        return location;
-    }//end of getLocation
-
-    public double getLatitude() {
-        if(location != null)
-            latitude = location.getLatitude();
-        return latitude;
-
-    }
-    public double getLongitude() {
-        if(location != null)
-            longitude = location.getLongitude();
-        return  longitude;
-    }
-
-    public void showSettingsAlert(){
-        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);//uses the context set on creation of the object
-        alertDialog.setTitle("GPS Settings");
-        alertDialog.setMessage("GPS is not enabled. Do you want to go to settings menu?");
-        alertDialog.setPositiveButton("Settings", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                Intent intent = new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS);
-                context.startActivity(intent);
-            }
-        });
-        alertDialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.cancel();
-            }
-        });
-        alertDialog.show();
-    }
-
-
-    //Required due to android studio. - Ian
-    @Nullable
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
-    //Required due to android studio. - Ian
-    @Override
-    public void onLocationChanged(Location location) {
-
-    }
-}//end of GPSManager
-*/
