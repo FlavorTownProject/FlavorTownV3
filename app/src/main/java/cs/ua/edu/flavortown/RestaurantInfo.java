@@ -1,19 +1,19 @@
 package cs.ua.edu.flavortown;
 public class RestaurantInfo {
 
-    int latitude;
-    int longitude;
-    String restName;
-    Menu menu;
+    private double latitude;
+    private double longitude;
+    private String restName;
+    private Menu menu;
 
     //Added these in for pin info - Ian
-    String address;
-    String hours;
+    private String address;
+    private String hours;
 
     public RestaurantInfo() {
         // empty default constructor, necessary for Firebase to be able to deserialize blog posts
     }
-    public int getLatitude() {
+    public double getLatitude() {
         return latitude;
     }
     public double getLongitude() {
@@ -30,11 +30,11 @@ public class RestaurantInfo {
     public String getAddress(){ return address;}
     public String getHours(){return hours;}
 
-    public void setLatitude(int latitude) {
+    public void setLatitude(double latitude) {
         this.latitude = latitude;
     }
 
-    public void setLongitude(int longitude) {
+    public void setLongitude(double longitude) {
         this.longitude = longitude;
     }
 
