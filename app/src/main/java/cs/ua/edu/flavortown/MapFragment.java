@@ -23,6 +23,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
 import com.google.android.gms.common.GooglePlayServicesRepairableException;
@@ -33,7 +34,10 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptor;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONArray;
@@ -54,9 +58,7 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.LOCATION_SERVICE;
 
-
-
-public class MapFragment extends SupportMapFragment implements OnMapReadyCallback,GoogleMap.OnMyLocationButtonClickListener {
+public class MapFragment extends SupportMapFragment implements OnMapReadyCallback,GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnInfoWindowClickListener {
 
     private static final String LOGTAG = "MapFragment";
     private GoogleMap mMap;
@@ -132,19 +134,12 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                 networkRequests.join();
             addMarkers();
 
-            /*
-            LatLng test = new LatLng(restaurants[0].getLatitude(), restaurants[0].getLongitude());
-            mMap.addMarker(new MarkerOptions().position(test).title(restaurants[0].getRestName()));
-            Log.v(LOGTAG, "First additional item added");
-            Log.v(LOGTAG, restaurants[0].getRestName().toString());
-            Log.v(LOGTAG, "Lat".concat(String.valueOf(restaurants[0].getLatitude())));
-            Log.v(LOGTAG, "Lon".concat(String.valueOf(restaurants[0].getLongitude())));
-            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(test, 12.0f));
-            */
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
+        mMap.setOnMyLocationButtonClickListener(this);
+        mMap.setOnInfoWindowClickListener(this);
         Log.v(LOGTAG, "Denny Chimes");
         Log.v(LOGTAG, "Starting urlThread");
 
@@ -160,7 +155,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         {
             Log.v("addMarkers", "x = " + String.valueOf(x));
             LatLng test = new LatLng(restaurants[x].getLatitude(), restaurants[x].getLongitude());
-            mMap.addMarker(new MarkerOptions().position(test).title(restaurants[x].getRestName()));
+            mMap.addMarker(new MarkerOptions().position(test).title(restaurants[x].getRestName()).snippet(restaurants[x].getAddress()));
             Log.v("addMarkers", restaurants[x].getRestName());
             Log.v("addMarkers", "Lat".concat(String.valueOf(restaurants[x].getLatitude())));
             Log.v("addMarkers", "Lon".concat(String.valueOf(restaurants[x].getLongitude())));
@@ -271,8 +266,33 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     @Override
     public boolean onMyLocationButtonClick() {
         Log.v("LocationButtonClick", "Button Clicked");
-        LatLng currentLocation = new LatLng(gpsManager.getLatitude(),gpsManager.getLongitude());
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(currentLocation));
+        Toast.makeText(getActivity(),"Click event registered",Toast.LENGTH_SHORT).show();
+        LatLng currentLocation = new LatLng(gpsManager.getLongitude(),gpsManager.getLatitude());
+        //MarkerOptions locationPin = new MarkerOptions().icon(BitmapDescriptorFactory.fromFile()); Need a decent pic
+        //mMap.addMarker(locationPin);
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,12.0f));
         return true;
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        Toast.makeText(getActivity(),"Click event registered",Toast.LENGTH_SHORT).show();
+        RestaurantInfo currentRest = getRestaurantFromMarker(marker);
+        Intent nextScreen = new Intent(getActivity(), MenuActivity.class);
+        nextScreen.putExtra("restaurantName", currentRest.getRestName());
+        nextScreen.putExtra("restaurantAddress",currentRest.getAddress());
+        //nextScreen.putExtra("restaurantID",currentRest.getID()); We are going to need to do the menu look up on the MenuActivity as a Menu object can't be passed.
+        startActivity(nextScreen);
+
+    }
+
+    private RestaurantInfo getRestaurantFromMarker(Marker marker){
+        LatLng markerPosition = marker.getPosition();
+        for(int x = 0; x < restaurants.length ; x++)
+        {
+            if (restaurants[x].getLatitude() == markerPosition.latitude && restaurants[x].getLongitude() == markerPosition.longitude)
+                return restaurants[x];
+        }
+        return null;//if hit there is a problem as this function should not be called unless the restaurant is confirmed to be in the list.
     }
 }//end of MapFragment

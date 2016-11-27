@@ -32,10 +32,10 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".RatingActivity"
-            android:screenOrientation="portrait"></activity>
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -44,6 +44,7 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDU5KCvghYUqvJdkMY7OBo2mr8jsAEvHqY" />
 
+        <activity android:name=".MenuActivity"></activity>
     </application>
 
 </manifest>
