@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="cs.ua.edu.flavortown.RatingActivity">
+    tools:context="cs.ua.edu.flavortown.FoodActivity">
 
     <TextView
         android:text="Food Item"
@@ -23,8 +23,8 @@
     <RatingBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="23dp"
-        android:id="@+id/barRatingBar"
+        android:layout_marginTop="31dp"
+        android:id="@+id/barFoodRatingBar"
         android:layout_below="@+id/txtFoodName"
         android:layout_centerHorizontal="true" />
 
@@ -32,8 +32,8 @@
         android:text="Submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/buttonSubmit"
-        android:layout_marginTop="32dp"
+        android:id="@+id/buttonFoodSubmit"
+        android:layout_marginTop="34dp"
         android:layout_below="@+id/linearLayout1"
         android:layout_centerHorizontal="true" />
 
@@ -41,25 +41,25 @@
         android:id="@+id/linearLayout1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="19dp"
-        android:layout_marginStart="21dp"
-        android:layout_below="@+id/barRatingBar"
-        android:layout_alignStart="@+id/barRatingBar">
+        android:layout_marginTop="27dp"
+        android:layout_below="@+id/barFoodRatingBar"
+        android:layout_alignEnd="@+id/buttonFoodSubmit">
 
         <TextView
             android:id="@+id/lblResult"
-            android:layout_width="wrap_content"
+            android:layout_width="121dp"
             android:layout_height="wrap_content"
-            android:text="Result : "
+            android:text="Rating : "
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textSize="30sp" />
 
         <TextView
-            android:id="@+id/txtRatingValue"
+            android:id="@+id/txtFoodRatingValue"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=""
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="30sp" />
 
     </LinearLayout>
 

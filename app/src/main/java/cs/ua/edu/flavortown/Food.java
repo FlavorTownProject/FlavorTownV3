@@ -1,22 +1,26 @@
 package cs.ua.edu.flavortown;
-public class Food {
-    String[] flag;
-    String foodItem;
-    int[] rating;
-    float currRating;
-    int numOfRating;
 
-    public Food() {
-        // empty default constructor, necessary for Firebase to be able to deserialize blog posts
+public class Food {
+    public String flag;
+    public String foodItem;
+    public float currRating;
+    public int numOfRating;
+
+    @SuppressWarnings("unused")
+    public Food() {}
+
+    public Food(String flag, String foodItem, float currRating, int numOfRating) {
+        this.flag = flag;
+        this.foodItem = foodItem;
+        this.currRating = currRating;
+        this.numOfRating = numOfRating;
     }
-    public String[] getFlag() {
+
+    public String getFlag() {
         return flag;
     }
     public String getFoodItem() {
         return foodItem;
-    }
-    public int[] getRating() {
-        return rating;
     }
     public float getCurrRating(){
         return currRating;
