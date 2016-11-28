@@ -11,7 +11,12 @@
     <TextView
         android:id="@+id/section_label"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="Testing"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="13dp"
+        android:textSize="24sp" />
 
     <Button
         android:text="Database Sample"
@@ -19,6 +24,14 @@
         android:layout_height="wrap_content"
         android:id="@+id/DatabaseButton"
         android:layout_below="@+id/section_label"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:text="Mood Sample"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/MoodButton"
+        android:layout_below="@+id/DatabaseButton"
         android:layout_centerHorizontal="true" />
 
 </RelativeLayout>
