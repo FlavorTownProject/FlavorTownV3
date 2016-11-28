@@ -87,7 +87,6 @@ public class MoodActivity extends AppCompatActivity {
 
             }
         });
-
         // Delete items when clicked
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -113,5 +112,31 @@ public class MoodActivity extends AppCompatActivity {
                 ;}
         })
         */
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+
+                Query myQuery = myRef.orderByValue().equalTo((String)
+                        listView.getItemAtPosition(position));
+
+
+                myQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChildren()) {
+                            DataSnapshot firstChild = dataSnapshot.getChildren().iterator().next();
+                            String moodvalue = firstChild.getValue(String.class);
+                            Log.w("TAG_MOODVALUE:", moodvalue);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                })
+                ;}
+        })
         ;}
 }
