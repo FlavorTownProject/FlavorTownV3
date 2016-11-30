@@ -58,20 +58,23 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.app.Activity.RESULT_OK;
 import static android.content.Context.LOCATION_SERVICE;
 
-public class MapFragment extends SupportMapFragment implements OnMapReadyCallback,GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnInfoWindowClickListener {
+public class MapFragment extends SupportMapFragment implements OnMapReadyCallback,GoogleMap.OnMyLocationButtonClickListener, GoogleMap.OnInfoWindowClickListener, android.location.LocationListener {
 
     private static final String LOGTAG = "MapFragment";
     private GoogleMap mMap;
     private static String gpURL = "https://maps.googleapis.com/maps/api/place/textsearch/json?&key=AIzaSyDZzxLsGBZ2aefPmsyGzpdB63OVpvc8PNY&query=hamburgers";//AIzaSyDU5KCvghYUqvJdkMY7OBo2mr8jsAEvHqY";
     static String detailURL = "https://maps.googleapis.com/maps/api/place/details/json?&key=AIzaSyDZzxLsGBZ2aefPmsyGzpdB63OVpvc8PNY";
 
+
     private JSONObject jsonIDS;
     private RestaurantInfo restaurants[] = new RestaurantInfo[20];
+    private Marker markers[] = new Marker[20];
 
     private GPSManager gpsManager;
     private Thread networkRequests;
 
     //int PLACE_PICKER_REQUEST = 1;
+    LatLng currentLocation;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -118,23 +121,30 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         if (ContextCompat.checkSelfPermission(getActivity(), ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             Log.v(LOGTAG, "My Location Enabled");
             mMap.setMyLocationEnabled(true);
+            currentLocation = new LatLng(gpsManager.getLatitude(),gpsManager.getLongitude());
+            Log.v(LOGTAG, "current lat = " + String.valueOf(currentLocation.latitude));
+            Log.v(LOGTAG, "current lon = " + String.valueOf(currentLocation.longitude));
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation, 12.0f));
         }
         if (gpsManager == null)
             Log.v("GPSManager", "gpsManager null pointer");
         Log.v(LOGTAG, String.valueOf(gpsManager.getLongitude()));
 
-        LatLng dennyChimes = new LatLng(33.209896, -87.546315);
-        mMap.addMarker(new MarkerOptions().position(dennyChimes).title("Denny Chimes"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dennyChimes,12.0f));
+        //LatLng dennyChimes = new LatLng(33.209896, -87.546315);
+        //mMap.addMarker(new MarkerOptions().position(dennyChimes).title("Denny Chimes"));
+        //mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(dennyChimes,12.0f));
 
         Log.v(LOGTAG, "Attempting to add first additional item");
 
         try {
             while (networkRequests.isAlive())
                 networkRequests.join();
-            addMarkers();
+            if(jsonIDS.getString("status").equals("ZERO_RESULTS"))
+                Toast.makeText(getActivity(),"No Results Found", Toast.LENGTH_LONG).show();
+            else
+                addMarkers();
 
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | JSONException e) {
             e.printStackTrace();
         }
 
@@ -155,7 +165,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         {
             Log.v("addMarkers", "x = " + String.valueOf(x));
             LatLng test = new LatLng(restaurants[x].getLatitude(), restaurants[x].getLongitude());
-            mMap.addMarker(new MarkerOptions().position(test).title(restaurants[x].getRestName()).snippet(restaurants[x].getAddress()));
+            markers[x] = mMap.addMarker(new MarkerOptions().position(test).title(restaurants[x].getRestName()).snippet(restaurants[x].getAddress()));
             Log.v("addMarkers", restaurants[x].getRestName());
             Log.v("addMarkers", "Lat".concat(String.valueOf(restaurants[x].getLatitude())));
             Log.v("addMarkers", "Lon".concat(String.valueOf(restaurants[x].getLongitude())));
@@ -164,7 +174,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
 
     private void findRestaurants(){
         try {
-            String temp = makeURLString(gpURL, "restaurant", "1000", gpsManager.getLatitude(), gpsManager.getLongitude());
+            String temp = makeURLString(gpURL, "restaurant", "5000", gpsManager.getLatitude(), gpsManager.getLongitude());
             jsonIDS = getJSONFile(new URL(temp));
         }
         catch (MalformedURLException e){
@@ -209,6 +219,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                     placeInfo = placeInfo.getJSONObject("result");
                     restaurants[x].setAddress(placeInfo.getString("formatted_address"));
                     restaurants[x].setRestName(placeInfo.getString("name"));
+                    restaurants[x].setGoogleID(placeInfo.getString("id"));
                     Log.v(funcTag, restaurants[x].getRestName() );
                 }
 
@@ -254,7 +265,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         Log.v("makeURL", combinedString);
         combinedString = combinedString.concat("&radius=".concat(rad));
         Log.v("makeURL", combinedString);
-        combinedString = combinedString.concat("&location=".concat(String.valueOf(lon).concat(",".concat(String.valueOf(lat)))));
+        combinedString = combinedString.concat("&location=".concat(String.valueOf(lat).concat(",".concat(String.valueOf(lon)))));
         Log.v("makeURL", combinedString);
         return combinedString;
     }
@@ -267,10 +278,12 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     public boolean onMyLocationButtonClick() {
         Log.v("LocationButtonClick", "Button Clicked");
         Toast.makeText(getActivity(),"Click event registered",Toast.LENGTH_SHORT).show();
-        LatLng currentLocation = new LatLng(gpsManager.getLongitude(),gpsManager.getLatitude());
+        currentLocation = new LatLng(gpsManager.getLatitude(),gpsManager.getLongitude());
         //MarkerOptions locationPin = new MarkerOptions().icon(BitmapDescriptorFactory.fromFile()); Need a decent pic
-        //mMap.addMarker(locationPin);
+        mMap.addMarker(new MarkerOptions().position(currentLocation).title("Current Location!"));//mMap.addMarker(locationPin);
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(currentLocation,12.0f));
+
+
         return true;
     }
 
@@ -281,7 +294,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
         Intent nextScreen = new Intent(getActivity(), MenuActivity.class);
         nextScreen.putExtra("restaurantName", currentRest.getRestName());
         nextScreen.putExtra("restaurantAddress",currentRest.getAddress());
-        //nextScreen.putExtra("restaurantID",currentRest.getID()); We are going to need to do the menu look up on the MenuActivity as a Menu object can't be passed.
+        nextScreen.putExtra("restaurantID",currentRest.getGoogleID()); //We are going to need to do the menu look up on the MenuActivity as a Menu object can't be passed.
         startActivity(nextScreen);
 
     }
@@ -294,5 +307,49 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
                 return restaurants[x];
         }
         return null;//if hit there is a problem as this function should not be called unless the restaurant is confirmed to be in the list.
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        try{
+            while(networkRequests.isAlive())
+                networkRequests.join();
+            for(int x = 0 ; x < markers.length ; x++){
+                markers[x].remove();
+            }
+            //mMap.clear();
+            gpsManager.onLocationChanged(location);
+            networkRequests.start();
+            while (networkRequests.isAlive())
+                networkRequests.join();
+
+            if(jsonIDS.getString("status").equals("ZERO_RESULTS"))
+                Toast.makeText(getActivity(),"No Results Found", Toast.LENGTH_LONG).show();
+            else
+                addMarkers();
+
+
+        }
+        catch(InterruptedException |JSONException e)
+        {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+
     }
 }//end of MapFragment

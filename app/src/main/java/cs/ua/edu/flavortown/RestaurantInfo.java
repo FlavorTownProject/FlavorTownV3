@@ -5,6 +5,7 @@ public class RestaurantInfo {
     private double longitude;
     private String restName;
     private Menu menu;
+    private String googleID;
 
     //Added these in for pin info - Ian
     private String address;
@@ -50,5 +51,11 @@ public class RestaurantInfo {
         this.hours = hours;
     }
 
+    public String getGoogleID() {
+        return googleID;
+    }
 
+    public void setGoogleID(String googleID) {
+        this.googleID = googleID;
+    }
 }
