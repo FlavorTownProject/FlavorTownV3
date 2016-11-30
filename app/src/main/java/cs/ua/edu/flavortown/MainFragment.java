@@ -91,28 +91,30 @@ public class MainFragment extends Fragment {
         });
 
 
-        final ListView restaurantList = (ListView) v.findViewById(R.id.WFlistview);
+        final ListView mainList = (ListView) v.findViewById(R.id.WFlistview);
 
 
         top10Button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                String a = "";
-                String[] displayItems = databaseReturn(a);  //TODO: Fill in functions
+                String top10query = "a";
+                String[] displayItems = databaseReturn(top10query);  //TODO: Fill in functions
                 adapter = new ArrayAdapter<String>(v.getContext(),android.R.layout.simple_list_item_1,displayItems);
+                mainList.setAdapter(adapter);
             }
         });
 
         historyButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                String b = "";
-                String[] displayItems = databaseReturn(b);  //TODO: FIll in functions
+                String historyquery = "b";
+                String[] displayItems = databaseReturn(historyquery);  //TODO: FIll in functions
                 adapter = new ArrayAdapter<String>(v.getContext(),android.R.layout.simple_list_item_1,displayItems);
+                mainList.setAdapter(adapter);
             }
         });
 
-        restaurantList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+        mainList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
             //@Override
             public  void onItemClick(AdapterView<?> parent,View v,int position, long id){
                 //Object a = restaurantList.getSelectedItem();
@@ -130,8 +132,8 @@ public class MainFragment extends Fragment {
     public String[] databaseReturn(String query){
 
         //Todo: add database query that inserts data into the array
-        String[] a  = {"Burger A","Burger B","Burger C","Burger D","Burger E","Burger F","Burger G"};
-        return a;
+        String[] result  = {query,query+query,query+query+query,query+query+query+query,query+query+query+query+query,query+query+query+query,"Burger G"};
+        return result;
     }
 
     public interface OnFragmentInteractionListener {
