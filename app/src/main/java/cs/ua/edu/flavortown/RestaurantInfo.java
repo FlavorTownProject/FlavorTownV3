@@ -4,6 +4,8 @@ public class RestaurantInfo {
     private double latitude;
     private double longitude;
     private String restName;
+
+
     private Menu menu;
     private String googleID;
 
@@ -58,4 +60,7 @@ public class RestaurantInfo {
     public void setGoogleID(String googleID) {
         this.googleID = googleID;
     }
+
+    public void setMenu(Menu menu) {this.menu = menu;}
+
 }

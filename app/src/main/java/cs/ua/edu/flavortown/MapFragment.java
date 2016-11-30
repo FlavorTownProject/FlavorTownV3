@@ -62,8 +62,11 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
 
     private static final String LOGTAG = "MapFragment";
     private GoogleMap mMap;
-    private static String gpURL = "https://maps.googleapis.com/maps/api/place/textsearch/json?&key=AIzaSyDZzxLsGBZ2aefPmsyGzpdB63OVpvc8PNY&query=hamburgers";//AIzaSyDU5KCvghYUqvJdkMY7OBo2mr8jsAEvHqY";
-    static String detailURL = "https://maps.googleapis.com/maps/api/place/details/json?&key=AIzaSyDZzxLsGBZ2aefPmsyGzpdB63OVpvc8PNY";
+
+    //original key: AIzaSyDZzxLsGBZ2aefPmsyGzpdB63OVpvc8PNY
+    //Back up Key (Flavortown): 	AIzaSyA2pbTswWHv5NslX4e35AWEu-PiCbMe3wY
+    private static String gpURL = "https://maps.googleapis.com/maps/api/place/textsearch/json?&key=AIzaSyA2pbTswWHv5NslX4e35AWEu-PiCbMe3wY&query=hamburgers";//AIzaSyDU5KCvghYUqvJdkMY7OBo2mr8jsAEvHqY";
+    static String detailURL = "https://maps.googleapis.com/maps/api/place/details/json?&key=AIzaSyA2pbTswWHv5NslX4e35AWEu-PiCbMe3wY";
 
 
     private JSONObject jsonIDS;
@@ -312,6 +315,7 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     @Override
     public void onLocationChanged(Location location) {
         try{
+            Log.v(LOGTAG, "Hit Location Change");
             while(networkRequests.isAlive())
                 networkRequests.join();
             for(int x = 0 ; x < markers.length ; x++){
