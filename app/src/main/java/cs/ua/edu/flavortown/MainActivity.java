@@ -193,7 +193,7 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                     //fragment = PlaceholderFragment.newInstance(position+1);
 
-                    fragment = new MainFragment();
+                    fragment = new MapFragment();
                     break;
                 case 1:
                     // fragment = PlaceholderFragment.newInstance(position+1);
@@ -201,7 +201,7 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new SearchBarFragment();
                     break;
                 case 2:
-                    fragment = new MapFragment();
+                    fragment = new MainFragment();
                     break;
                 default:
                     break;
@@ -220,11 +220,11 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Home";
+                    return "Map";
                 case 1:
                     return "Search";
                 case 2:
-                    return "Map";
+                    return "What's Fresh?";
             }
             return null;
         }
