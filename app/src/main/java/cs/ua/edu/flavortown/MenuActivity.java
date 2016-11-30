@@ -3,6 +3,9 @@ package cs.ua.edu.flavortown;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.auth.api.model.StringList;
@@ -24,29 +27,34 @@ import java.util.Map;
 public class MenuActivity extends AppCompatActivity {
 
     RestaurantInfo currentRestuarant;
-    TextView restaurantName;
     DatabaseReference restaurantTable;
-    JSONObject jsonTable;
+
+    TextView restaurantName;
+    Button topItemButton;
+    ListView menuList;
+
 
     String LOGTAG = "MenuActvity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
-        restaurantName = (TextView) findViewById(R.id.restaurantTextView);
-
+        restaurantName = (TextView) findViewById(R.id.restaurantNameTextView);
         currentRestuarant = new RestaurantInfo();
 
         Bundle extras = getIntent().getExtras();
         currentRestuarant.setRestName(extras.getString("restaurantName"));
         currentRestuarant.setGoogleID(extras.getString("restaurantID"));
-        restaurantName.setText(extras.getString("restaurantName"));
+        restaurantName.append(extras.getString("restaurantName"));
+
+        topItemButton = (Button) findViewById(R.id.topItemButton);
+        menuList = (ListView) findViewById(R.id.menuList);
 
         final FirebaseDatabase database = FirebaseDatabase.getInstance();
         // Get a reference to the todoItems child items it the database
         restaurantTable = database.getReference("restaurantTable");
         restaurantTable.addValueEventListener(new ValueEventListener(){
-            @Override
+            @Override//please don't touch this listener unless you have to. -Ian
             public void onDataChange(DataSnapshot dataSnapshot) {
 
                 String ID = "";
@@ -98,26 +106,21 @@ public class MenuActivity extends AppCompatActivity {
                             }
                             if(currMenu.length > 0){
                                 Log.v(LOGTAG, "Populated menu");
+                                //currMenu.sortItemsByRating();
                                 currentRestuarant.setMenu(currMenu);
+                                populateMenu(true);
                             }
                             else
                             {
                                 Log.v(LOGTAG, "No menu detected...");
                                 currentRestuarant.setMenu(null);
+                                populateMenu(false);
                             }
                             break;//found the restaurant and retrieved the menu
                         }//end of if
 
                     }//end of for loop
 
-                    /*
-                    Log.v(LOGTAG, "in onDataChange");
-                    HashMap databaseValue = (HashMap) dataSnapshot.getValue();//jsonTable =  dataSnapshot.getValue(JSONObject.class);
-                    Log.v(LOGTAG, "databaseValue before JSON");
-                    Log.v(LOGTAG, databaseValue.toString());
-                    jsonTable = dataSnapshot.getValue(JSONObject.class);//new JSONObject(databaseValue.toString());
-                    Log.v(LOGTAG, jsonTable.toString());//Log.v(LOGTAG,hashMap.toString());
-                    //getResturantMenu();*/
                 }
                 catch( Exception e){
                     e.printStackTrace();
@@ -130,25 +133,51 @@ public class MenuActivity extends AppCompatActivity {
 
             }
         });
+
+
+
+
+
     }
 
-    private String stringIncrementer(String baseString, int value)
-    {
+    private String stringIncrementer(String baseString, int value) {
         return baseString.concat(String.valueOf(value));
     }
-    /*
-    private JSONObject getResturantMenu ()
+
+    private String[] menuItemsToArray()
     {
-        JSONObject menu = null;
-        try {
-            Log.v(LOGTAG, "Getting Menu");
-            menu = jsonTable.getJSONObject(currentRestuarant.getGoogleID());
-            Log.v(LOGTAG, menu.toString());
+        Food[] pullMenu = currentRestuarant.getMenu().getFoodList();
+        String listItems[] = new String[currentRestuarant.getMenu().length];
+        for(int x = 0; x < pullMenu.length; x++) {
+
+            listItems[x] = pullMenu[x].getFoodItem();
+            Log.v(LOGTAG, x + " = " + listItems[x]);
         }
-        catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return menu;
+        return  listItems;
     }
-    */
+
+    private String[] menuRatingsToArray()
+    {
+        Food[] pullMenu = currentRestuarant.getMenu().getFoodList();
+        String listItems[] = new String[currentRestuarant.getMenu().length];
+        for(int x = 0; x < pullMenu.length; x++) {
+            listItems[x] = String.valueOf(pullMenu[x].getCurrRating());
+        }
+        return  listItems;
+    }
+
+    private void populateMenu(boolean menuIsNotNull)
+    {
+        if (menuIsNotNull) {
+            ArrayAdapter adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, menuItemsToArray());
+            menuList.setAdapter(adapter);
+            topItemButton.append(currentRestuarant.getMenu().getHighestRatedItem().getFoodItem());
+        }
+        else
+        {
+            topItemButton.setText("Menu is not available for this restaurant");
+        }
+    }
+
+
 }
