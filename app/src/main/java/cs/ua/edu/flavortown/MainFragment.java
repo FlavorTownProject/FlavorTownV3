@@ -8,7 +8,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.Toast;
 
 
 /**
@@ -24,8 +28,10 @@ public class MainFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
 
-    private Button databaseButton;
+    private Button top10Button;
     private Button moodButton;
+    private Button historyButton;
+    private  ArrayAdapter<String> adapter;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -72,15 +78,10 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_main, container, false);
-        databaseButton = (Button) v.findViewById(R.id.DatabaseButton);
-        databaseButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v){
-                Intent intent = new Intent(getContext(), RatingActivity.class);
-                startActivity(intent);
-            }
-        });
+        top10Button = (Button) v.findViewById(R.id.top10Button);
+        historyButton =(Button) v.findViewById(R.id.historyButton);
         moodButton = (Button) v.findViewById(R.id.MoodButton);
+
         moodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
@@ -88,7 +89,51 @@ public class MainFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+
+        final ListView mainList = (ListView) v.findViewById(R.id.WFlistview);
+
+
+        top10Button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                String top10query = "a";
+                String[] displayItems = databaseReturn(top10query);  //TODO: Fill in functions
+                adapter = new ArrayAdapter<String>(v.getContext(),android.R.layout.simple_list_item_1,displayItems);
+                mainList.setAdapter(adapter);
+            }
+        });
+
+        historyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                String historyquery = "b";
+                String[] displayItems = databaseReturn(historyquery);  //TODO: FIll in functions
+                adapter = new ArrayAdapter<String>(v.getContext(),android.R.layout.simple_list_item_1,displayItems);
+                mainList.setAdapter(adapter);
+            }
+        });
+
+        mainList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            //@Override
+            public  void onItemClick(AdapterView<?> parent,View v,int position, long id){
+                //Object a = restaurantList.getSelectedItem();
+                String a =  (String) parent.getItemAtPosition(position);
+
+                Toast.makeText(v.getContext(), a, Toast.LENGTH_SHORT).show();
+            }
+
+
+        });
+
         return v;
+    }
+
+    public String[] databaseReturn(String query){
+
+        //Todo: add database query that inserts data into the array
+        String[] result  = {query,query+query,query+query+query,query+query+query+query,query+query+query+query+query,query+query+query+query,"Burger G"};
+        return result;
     }
 
     public interface OnFragmentInteractionListener {

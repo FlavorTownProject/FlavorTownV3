@@ -12,26 +12,42 @@
         android:id="@+id/section_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Testing"
+        android:text="What's Fresh?"
+        android:textSize="24sp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="13dp"
-        android:textSize="24sp" />
+        android:layout_centerHorizontal="true" />
 
     <Button
-        android:text="Database Sample"
+        android:text="Top 10 Food Items"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/DatabaseButton"
+        android:id="@+id/top10Button"
+        android:layout_alignBaseline="@+id/historyButton"
+        android:layout_alignBottom="@+id/historyButton"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:text="What's Your Mood?"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/MoodButton"
         android:layout_below="@+id/section_label"
         android:layout_centerHorizontal="true" />
 
     <Button
-        android:text="Mood Sample"
+        android:text="Display History"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/MoodButton"
-        android:layout_below="@+id/DatabaseButton"
-        android:layout_centerHorizontal="true" />
+        android:id="@+id/historyButton"
+        android:layout_marginTop="17dp"
+        android:layout_below="@+id/MoodButton"
+        android:layout_alignParentEnd="true" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/top10Button"
+        android:layout_alignParentStart="true"
+        android:id="@+id/WFlistview" />
 
 </RelativeLayout>

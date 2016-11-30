@@ -72,14 +72,7 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -193,7 +186,7 @@ public class MainActivity extends AppCompatActivity {
                 case 0:
                     //fragment = PlaceholderFragment.newInstance(position+1);
 
-                    fragment = new MainFragment();
+                    fragment = new MapFragment();
                     break;
                 case 1:
                     // fragment = PlaceholderFragment.newInstance(position+1);
@@ -201,7 +194,7 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new SearchBarFragment();
                     break;
                 case 2:
-                    fragment = new MapFragment();
+                    fragment = new MainFragment();
                     break;
                 default:
                     break;
@@ -220,11 +213,11 @@ public class MainActivity extends AppCompatActivity {
         public CharSequence getPageTitle(int position) {
             switch (position) {
                 case 0:
-                    return "Home";
+                    return "Map";
                 case 1:
                     return "Search";
                 case 2:
-                    return "Map";
+                    return "What's Fresh?";
             }
             return null;
         }
