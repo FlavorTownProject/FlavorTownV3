@@ -9,7 +9,7 @@ android {
     }
     defaultConfig {
         applicationId "cs.ua.edu.flavortown"
-        minSdkVersion 15
+        minSdkVersion 23
         targetSdkVersion 25
         versionCode 1
         versionName "1.0"
@@ -20,6 +20,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE-FIREBASE.txt'
+        exclude 'META-INF/NOTICE'
     }
 }
 
@@ -33,6 +39,7 @@ dependencies {
     compile 'com.android.support:multidex:1.0.1'
     compile 'com.google.firebase:firebase-core:9.8.0'
     compile 'com.google.firebase:firebase-database:9.8.0'
+    compile 'com.firebaseui:firebase-ui:0.6.2'
     testCompile 'junit:junit:4.12'
 }
 
