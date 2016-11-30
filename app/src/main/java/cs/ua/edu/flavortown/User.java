@@ -1,6 +1,22 @@
 package cs.ua.edu.flavortown;
 
 public class User {
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setRatingWeight(float ratingWeight) {
+        this.ratingWeight = ratingWeight;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
     String email;
     String password;
     float ratingWeight;
