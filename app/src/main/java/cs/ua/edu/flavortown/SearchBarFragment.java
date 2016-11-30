@@ -78,9 +78,7 @@ public class SearchBarFragment extends Fragment {
         final Button SearchButton = (Button)  v.findViewById(R.id.SearchButton);
         //final TextView a = new TextView(getContext());
         final ListView restaurantList = (ListView) v.findViewById(R.id.restaurantList);
-        String[] displayItems = databaseReturn();
-        final ArrayAdapter<String> adapter = new ArrayAdapter<String>(this.getContext(),android.R.layout.simple_list_item_1,displayItems);
-        final ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this.getContext(),android.R.layout.two_line_list_item,displayItems);
+
         //ArrayList<ListEntry> items = new ArrayList<ListEntry>();
         final RadioGroup radioGroup = (RadioGroup) v.findViewById(R.id.radioGroup);
 
@@ -110,6 +108,8 @@ public class SearchBarFragment extends Fragment {
         SearchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 String searchString = SearchBar.getText().toString();
+                String[] displayItems = databaseReturn(searchString,checked);
+                final ArrayAdapter<String> adapter = new ArrayAdapter<String>(v.getContext(),android.R.layout.simple_list_item_1,displayItems);
                 restaurantList.setAdapter(adapter);
 
             }
@@ -151,8 +151,8 @@ public class SearchBarFragment extends Fragment {
     }
 
 
-    public String[] databaseReturn(){
-
+    public String[] databaseReturn(String search, boolean choice){
+        // choice false=rest true=food
         //Todo: add database query that inserts data into the array
         String[] a  = {"Burger A","Burger B","Burger C","Burger D","Burger E","Burger F","Burger G"};
         return a;
