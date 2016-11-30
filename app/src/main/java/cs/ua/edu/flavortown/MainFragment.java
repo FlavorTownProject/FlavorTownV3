@@ -72,7 +72,7 @@ public class MainFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.fragment_main, container, false);
-        databaseButton = (Button) v.findViewById(R.id.DatabaseButton);
+        databaseButton = (Button) v.findViewById(R.id.top10Button);
         databaseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
