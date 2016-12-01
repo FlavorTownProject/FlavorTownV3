@@ -20,7 +20,7 @@ public class LoginActivity extends AppCompatActivity {
     DatabaseReference mUserTableRef;
 
     User enteredInfo;
-    int loginValue;
+    int loginValue = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
