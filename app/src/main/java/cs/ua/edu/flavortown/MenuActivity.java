@@ -49,7 +49,7 @@ public class MenuActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         currentRestuarant.setRestName(extras.getString("restaurantName"));
         currentRestuarant.setGoogleID(extras.getString("restaurantID"));
-        restaurantName.append(extras.getString("restaurantName"));
+        restaurantName.setText("TOP ITEM: " + extras.getString("restaurantName"));
 
         topItemButton = (Button) findViewById(R.id.topItemButton);
         menuList = (ListView) findViewById(R.id.menuList);

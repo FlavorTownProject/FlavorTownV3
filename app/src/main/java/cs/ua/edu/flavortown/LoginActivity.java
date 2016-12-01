@@ -3,6 +3,7 @@ package cs.ua.edu.flavortown;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -73,16 +74,17 @@ public class LoginActivity extends AppCompatActivity {
                         String emailDB = (String) messageSnapshot.child("email").getValue();
                         String passwordDB = (String) messageSnapshot.child("password").getValue();
 
+                        Log.v("LogAct",emailDB);
+                        Log.v("LogAct",passwordDB);
                         if (!(enteredInfo.getEmail().equals(emailDB))) {
                             loginValue = 0;
-                            break;
                         }
                         else if (!enteredInfo.getPassword().equals(passwordDB)) {
                             loginValue = 1;
-                            break;
                         }
                         else if (enteredInfo.getEmail().equals(emailDB) && enteredInfo.getPassword().equals(passwordDB)){
                             loginValue = 2;
+                            break;
                         }
                     }
                 }
