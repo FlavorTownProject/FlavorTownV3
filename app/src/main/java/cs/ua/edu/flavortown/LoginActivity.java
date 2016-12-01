@@ -42,10 +42,8 @@ public class LoginActivity extends AppCompatActivity {
                 if (arg1.getAction()==MotionEvent.ACTION_DOWN) {
                     attemptLogin(email, password);
                 }else if (arg1.getAction() == MotionEvent.ACTION_UP){
-                    if (loginValue == 0) {
-                        Toast.makeText(v.getContext(), "Username Incorrect", Toast.LENGTH_SHORT).show();
-                    } else if (loginValue == 1) {
-                        Toast.makeText(v.getContext(), "Password Incorrect", Toast.LENGTH_SHORT).show();
+                    if (loginValue == 0 || loginValue == 1) {
+                        Toast.makeText(v.getContext(), "Username or Password Incorrect", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(v.getContext(), "Login Successful", Toast.LENGTH_SHORT).show();
                         Intent nextScreen = new Intent(v.getContext(), MainActivity.class);
@@ -63,26 +61,27 @@ public class LoginActivity extends AppCompatActivity {
         enteredInfo = new User();
         enteredInfo.setEmail(email);
         enteredInfo.setPassword(password);
-
         final FirebaseDatabase db = FirebaseDatabase.getInstance();
         mUserTableRef = db.getReference("userTable");
         mUserTableRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+                int temp = 0;
                 try{
                     for(DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
                         String emailDB = (String) messageSnapshot.child("email").getValue();
                         String passwordDB = (String) messageSnapshot.child("password").getValue();
                         if (!(enteredInfo.getEmail().equals(emailDB))) {
-                            loginValue = 0;
+                            temp = 0;
                         }
                         else if (!enteredInfo.getPassword().equals(passwordDB)) {
-                            loginValue = 1;
+                            temp = 1;
                         }
                         else if (enteredInfo.getEmail().equals(emailDB) && enteredInfo.getPassword().equals(passwordDB)){
                             loginValue = 2;
                             break;
                         }
+                        loginValue=temp;
                     }
                 }
                 catch(Exception e){
