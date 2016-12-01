@@ -99,9 +99,9 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-                Intent nextScreen = new Intent(this.getBaseContext(), MainActivity.class);
+                Intent nextScreen = new Intent(this.getApplicationContext(), settingsActivity.class);
                 startActivity(nextScreen);
-                setContentView(R.layout.activity_settings);
+                //setContentView(R.layout.activity_settings);
             return true;
         }
 
