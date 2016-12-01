@@ -10,16 +10,6 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="cs.ua.edu.flavortown.FoodActivity">
 
-    <TextView
-        android:text="Food Item"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="35dp"
-        android:id="@+id/txtFoodName"
-        android:textSize="36sp" />
-
     <RatingBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -32,10 +22,11 @@
         android:text="Submit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/buttonFoodSubmit"
+        android:id="@+id/buttonFoodRate"
         android:layout_marginTop="34dp"
         android:layout_below="@+id/linearLayout1"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        tools:text="RATE" />
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -43,7 +34,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="27dp"
         android:layout_below="@+id/barFoodRatingBar"
-        android:layout_alignEnd="@+id/buttonFoodSubmit">
+        android:layout_alignEnd="@+id/buttonFoodRate">
 
         <TextView
             android:id="@+id/lblResult"
@@ -62,5 +53,23 @@
             android:textSize="30sp" />
 
     </LinearLayout>
+
+    <TextView
+        android:text="Food Item"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="35dp"
+        android:id="@+id/txtFoodName"
+        android:textSize="36sp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/buttonFoodRate"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="53dp"
+        android:id="@+id/listComments" />
 
 </RelativeLayout>

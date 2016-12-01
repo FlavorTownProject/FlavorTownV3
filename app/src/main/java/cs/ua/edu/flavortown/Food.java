@@ -7,6 +7,7 @@ public class Food {
     private float currRating;
     private int numOfRating;
     private float ratings[];
+    private String iterTag;
 
     @SuppressWarnings("unused")
     public Food() {}
@@ -32,6 +33,7 @@ public class Food {
         return numOfRating;
     }
     public float[] getRatings(){return ratings;}
+    public String getIterTag() {return iterTag;}
 
     public void setFlag(String flag) {
         this.flag = flag;
@@ -53,6 +55,8 @@ public class Food {
         this.ratings = ratings;
     }
 
+    public void setIterTag(String iterTag){ this.iterTag = iterTag;}
+
     public boolean calcCurrRating()//set as boolean for debugging and error checking | true = success ; false = failure
     {
         if( numOfRating > 0){
@@ -72,5 +76,6 @@ public class Food {
         this.numOfRating = copyItem.getNumOfRating();
         this.ratings = copyItem.getRatings();
         this.currRating = copyItem.getCurrRating();
+        this.iterTag = copyItem.getIterTag();
     }
 }

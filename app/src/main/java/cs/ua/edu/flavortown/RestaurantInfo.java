@@ -4,7 +4,7 @@ public class RestaurantInfo {
     private double latitude;
     private double longitude;
     private String restName;
-
+    private String dbKey;
 
     private Menu menu;
     private String googleID;
@@ -28,6 +28,7 @@ public class RestaurantInfo {
     public Menu getMenu(){
         return menu;
     }
+    public String getDbKey() { return  dbKey;}
 
     //added functions for new variables as well as setters for lat, lon , and name. -Ian
     public String getAddress(){ return address;}
@@ -62,5 +63,7 @@ public class RestaurantInfo {
     }
 
     public void setMenu(Menu menu) {this.menu = menu;}
+
+    public void setDbKey(String dbKey) {this.dbKey = dbKey;}
 
 }
