@@ -53,6 +53,8 @@ public class SearchBarFragment extends Fragment {
     String[] displayItems;
     RestaurantInfo[] restaurantArr;
     Food[] foodArr;
+    ArrayAdapter<String> adapter;
+    ListView restaurantList;
 
     String search;
     String LOGTAG = "SearchBarFragment";
@@ -94,10 +96,10 @@ public class SearchBarFragment extends Fragment {
         final EditText SearchBar = (EditText) v.findViewById(R.id.SearchBar);
         final Button SearchButton = (Button)  v.findViewById(R.id.SearchButton);
         //final TextView a = new TextView(getContext());
-        final ListView restaurantList = (ListView) v.findViewById(R.id.restaurantList);
+        restaurantList = (ListView) v.findViewById(R.id.restaurantList);
         //String[] displayItems = databaseReturn();
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(v.getContext(),
-                android.R.layout.simple_list_item_1, android.R.id.text1);
+        adapter = new ArrayAdapter<>(v.getContext(), android.R.layout.simple_list_item_1, android.R.id.text1);//final ArrayAdapter<String> adapter = new ArrayAdapter<>(v.getContext(),
+                //android.R.layout.simple_list_item_1, android.R.id.text1);
         //final ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this.getContext(),android.R.layout.two_line_list_item,displayItems);
         //ArrayList<ListEntry> items = new ArrayList<ListEntry>();
         final RadioGroup radioGroup = (RadioGroup) v.findViewById(R.id.radioGroup);
@@ -126,21 +128,50 @@ public class SearchBarFragment extends Fragment {
 
         //SearchButton.setOnTouchListener(new View.onTouchListener(){
 
+        restaurantList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            //@Override
+            public  void onItemClick(AdapterView<?> parent,View v,int position, long id){
+                //Object a = restaurantList.getSelectedItem();
+               String a = (String) parent.getItemAtPosition(position);
+                if(checked){
+                    //Pass a into Food Fragment
+                }
+                else{
+                    int location = 0;
+                    Log.v("SearchBarFragment", "clickListener: restaruantArr is null :" + String.valueOf(restaurantArr == null));
+                    for(int i = 0; i < restaurantArr.length; i++)
+                    {
+                        Log.v("SearchBarFragment", "restaurantArr["+String.valueOf(i)+"] = "+ restaurantArr[i].getRestName());
+                        if(restaurantArr[i].getRestName().equalsIgnoreCase(a)){
+                            location = i;
+                        }
+                    }
+                    Intent menuActivity = new Intent(getActivity(), MenuActivity.class);
+                    menuActivity.putExtra("restaurantName", restaurantArr[position].getRestName());
+                    menuActivity.putExtra("restaurantID", restaurantArr[position].getGoogleID());
+                    startActivity(menuActivity);
+                }
+            }
+        });
 
         SearchButton.setOnClickListener(new View.OnClickListener() {//SearchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
             public void onClick(View v){//onClick(View v) {
                 String searchString = SearchBar.getText().toString();
+                Log.v("SearchFragment", "searchString after click : " +searchString);
 
                 search = searchString;
+                Log.v("SearchFragment", "search after click : " +search);
                 if (checked) {
-                    foodDatabaseReturn(searchString);
-                    displayItems = new String[foodArr.length];
+                    //foodDatabaseReturn(searchString);
+                    //displayItems = new String[foodArr.length];
                 }
                 else{
                     adapter.clear();
                     boolean dummy = restaurantDatabaseReturn(searchString);
-
-                    if (restaurantArr != null) {
+                    Log.v("SearchBarFragment", "restaurantDBR completed");
+                   /* if (restaurantArr != null) {
+                        Log.v("SearchBarFragment", "starting to display items");
                         displayItems = new String[restaurantArr.length];
                         for (int i = 0; i < displayItems.length; i++) {
                             String restName = restaurantArr[i].getRestName();
@@ -152,9 +183,9 @@ public class SearchBarFragment extends Fragment {
                         displayItems = null;
                     }else{
                         adapter.add("No results found");
-                    }
+                    }*/
                 }
-                restaurantList.setAdapter(adapter);
+                //restaurantList.setAdapter(adapter);
             }
 
 /*
@@ -194,7 +225,6 @@ public class SearchBarFragment extends Fragment {
 
         });
 
-
         return v;
         //return inflater.inflate(R.layout.fragment_search_bar, container, false);
     }
@@ -233,8 +263,10 @@ public class SearchBarFragment extends Fragment {
 
     public boolean restaurantDatabaseReturn(String search1){
         FirebaseDatabase db = FirebaseDatabase.getInstance();
-        DatabaseReference restaurantTable = db.getReference("restaurantTable");
-
+        final DatabaseReference restaurantTable = db.getReference("restaurantTable");
+        Log.v("SearchFragment", "in restaurantDatabaseReturn");
+        Log.v("SearchFragment", "searchString in dbReturn : "+search1);
+        Log.v("SearchFragment", "search at the beginning of dbReturn : " +search);
         restaurantTable.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -249,8 +281,13 @@ public class SearchBarFragment extends Fragment {
                             String name = (String) messageSnapshot.child("restName").getValue();
                             String ID = (String) messageSnapshot.child("id").getValue();
                             String address = (String) messageSnapshot.child("address").getValue();
+                            Log.v("SearchBarFragment", "Starting compare");
+                            Log.v("SearchBarFragment", "name = " +name);
+                            Log.v("SearchBarFragment", "search = "+search);
+                            Log.v("SearchBarFragment", "name.toLowerCase().startsWith(search.toLowerCase()) = " + String.valueOf(name.toLowerCase().startsWith(search.toLowerCase())));
 
                             if (name.toLowerCase().startsWith(search.toLowerCase())) {
+                                Log.v("SearchBarFragment", "Found a valid restaurant name!");
                                 RestaurantInfo currRestaurant = new RestaurantInfo();
                                 currRestaurant.setRestName(name);
                                 currRestaurant.setGoogleID(ID);
@@ -263,10 +300,28 @@ public class SearchBarFragment extends Fragment {
                         }
                     }
                     restaurantArr = list.toArray(new RestaurantInfo[list.size()]);
+                    Log.v("SearchBarFragment", "restaruantArr is null :" + String.valueOf(restaurantArr == null));
+
+                    if (restaurantArr != null) {
+                        Log.v("SearchBarFragment", "starting to display items");
+                        displayItems = new String[restaurantArr.length];
+                        for (int i = 0; i < displayItems.length; i++) {
+                            String restName = restaurantArr[i].getRestName();
+                            String restAddress = restaurantArr[i].getAddress();
+                            displayItems[i] = restName.concat("\n").concat(restAddress);
+                            adapter.add(displayItems[i]);
+                        }
+                        //restaurantArr = null;
+                        //displayItems = null;
+                    }else{
+                        adapter.add("No results found");
+                    }
+                    restaurantList.setAdapter(adapter);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-            }@Override
+            }
+            @Override
             public void onCancelled(DatabaseError databaseError) {
 
             }
@@ -343,4 +398,5 @@ public class SearchBarFragment extends Fragment {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
     }
+
 }
