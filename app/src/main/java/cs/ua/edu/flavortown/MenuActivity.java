@@ -92,10 +92,16 @@ public class MenuActivity extends AppCompatActivity {
                                 {
                                     Log.v(LOGTAG,"Getting ratings");
                                     float tempRate[] = new float[temp.getNumOfRating()];
-                                    for(int y = 0; y < tempRate.length; y++) {
+                                    int y =0;
+                                    for (DataSnapshot ratings: messageSnapshot.child("menu").child(tagIter).child("rating").getChildren()){ //int y = 0; y < tempRate.length; y++) {
+                                        tempRate[y] = ratings.getValue(float.class); //tempRate[y] = messageSnapshot.child("menu").child(foodIter).child("rating").child(String.valueOf(y)).getValue(float.class);
+                                        Log.v(LOGTAG, "Rating " + String.valueOf(y) + " = " + String.valueOf(tempRate[y]));
+                                        y++;
+                                    }
+                                    /*for(int y = 0; y < tempRate.length; y++) {
                                         tempRate[y] =  messageSnapshot.child("menu").child(tagIter).child("rating").child(String.valueOf(y)).getValue(float.class);
                                         Log.v(LOGTAG, "Rating "+ String.valueOf(y) +" = "+ String.valueOf(tempRate[y]) );
-                                    }
+                                    }*/
                                     temp.setRatings(tempRate);
                                     Log.v(LOGTAG, "Set ratings (may need double check)" );
                                     temp.calcCurrRating();//do the math for currentRating
