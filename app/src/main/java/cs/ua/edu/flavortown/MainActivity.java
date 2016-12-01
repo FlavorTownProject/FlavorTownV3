@@ -1,5 +1,6 @@
 package cs.ua.edu.flavortown;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.design.widget.FloatingActionButton;
@@ -77,6 +78,8 @@ public class MainActivity extends AppCompatActivity {
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
+
+
     }
 
 
@@ -96,7 +99,9 @@ public class MainActivity extends AppCompatActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            //Todo: Set code to send to a settings activity (maybe a list activity?)
+                Intent nextScreen = new Intent(this.getBaseContext(), MainActivity.class);
+                startActivity(nextScreen);
+                setContentView(R.layout.activity_settings);
             return true;
         }
 
@@ -184,9 +189,9 @@ public class MainActivity extends AppCompatActivity {
             Fragment fragment = null;
             switch (position) {
                 case 0:
-                    //fragment = PlaceholderFragment.newInstance(position+1);
+                    fragment = PlaceholderFragment.newInstance(position+1);
 
-                    fragment = new MapFragment();
+                    //fragment = new MapFragment();
                     break;
                 case 1:
                     // fragment = PlaceholderFragment.newInstance(position+1);
