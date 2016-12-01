@@ -5,10 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.api.model.StringList;
 import com.google.firebase.database.ChildEventListener;
@@ -63,6 +65,7 @@ public class MenuActivity extends AppCompatActivity {
                 try {
                     Log.v(LOGTAG, "in onDataChange");
                     for(DataSnapshot messageSnapshot: dataSnapshot.getChildren()){
+                        messageSnapshot.getKey();
                         String name = (String) messageSnapshot.child("restName").getValue();
                         Log.v(LOGTAG,"name = "+ name);
                         ID = (String) messageSnapshot.child("id").getValue();
@@ -78,6 +81,7 @@ public class MenuActivity extends AppCompatActivity {
                                 tagIter = stringIncrementer("food", x);
                                 Log.v(LOGTAG, "tagIter = "+ tagIter);
                                 temp.setFoodItem( (String) messageSnapshot.child("menu").child(tagIter).child("name").getValue());
+
                                 Log.v(LOGTAG, "foodItem = "+ temp.getFoodItem());
                                 temp.setNumOfRating(messageSnapshot.child("menu").child(tagIter).child("numOfRating").getValue(int.class));
                                 Log.v(LOGTAG, "# of ratings = "+ temp.getNumOfRating());
@@ -101,6 +105,7 @@ public class MenuActivity extends AppCompatActivity {
                                     temp.setCurrRating(0);
                                 }
                                 temp.setFlag((String) messageSnapshot.child("menu").child(tagIter).child("flag").getValue());
+                                temp.setIterTag(tagIter);
                                 Log.v(LOGTAG, "flag = "+ temp.getFlag());
                                 Log.v(LOGTAG, "adding food to menu");
                                 currMenu.addToFoodList(temp);
@@ -148,13 +153,26 @@ public class MenuActivity extends AppCompatActivity {
          topItemButton.setOnClickListener(new View.OnClickListener() {
              @Override
              public void onClick(View view) {
-                 openFood(true);
+
+                 openFood(0);
              }
          });
 
+        menuList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            //@Override
+            public  void onItemClick(AdapterView<?> parent,View v,int position, long id){
+                //Object a = restaurantList.getSelectedItem();
+                Log.v(LOGTAG, "In menuList listener | position = " + String.valueOf(position));
+                String a =  (String) parent.getItemAtPosition(position);
+                openFood(position);
+                Toast.makeText(v.getContext(), a, Toast.LENGTH_SHORT).show();
+            }
+        });
 
 
-    }
+
+
+    }//end of onCreate
 
     private String stringIncrementer(String baseString, int value) {
         return baseString.concat(String.valueOf(value));
@@ -195,17 +213,20 @@ public class MenuActivity extends AppCompatActivity {
         }
     }
 
-    private void openFood(boolean menuIsNotNull)
+    private void openFood(int position)
     {
-        String fooditem;
-        if (menuIsNotNull) {
-            fooditem = currentRestuarant.getMenu().getHighestRatedItem().getFoodItem();
+
+        Food[] foodList = currentRestuarant.getMenu().getFoodList();
             Intent foodScreen = new Intent(this, FoodActivity.class);
-            foodScreen.putExtra("foodName", fooditem);
+            foodScreen.putExtra("foodName", foodList[position].getFoodItem());
+            foodScreen.putExtra("foodIterator",foodList[position].getIterTag());
+            foodScreen.putExtra("foodCurrRating", foodList[position].getCurrRating());
+            foodScreen.putExtra("foodNumOfRatings", foodList[position].getNumOfRating());
+            foodScreen.putExtra("foodRatings", foodList[position].getRatings());
+            foodScreen.putExtra("restaurantID",currentRestuarant.getGoogleID());
+            foodScreen.putExtra("restaurantKey", currentRestuarant.getDbKey());
             startActivity(foodScreen);
-        }
+
     }
-
-
 
 }
