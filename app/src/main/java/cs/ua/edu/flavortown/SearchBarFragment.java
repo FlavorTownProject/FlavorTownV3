@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,12 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 /**
@@ -78,7 +85,10 @@ public class SearchBarFragment extends Fragment {
         final Button SearchButton = (Button)  v.findViewById(R.id.SearchButton);
         //final TextView a = new TextView(getContext());
         final ListView restaurantList = (ListView) v.findViewById(R.id.restaurantList);
-
+        String[] displayItems = databaseReturn();
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(v.getContext(),
+                android.R.layout.simple_list_item_1, android.R.id.text1);
+        //final ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this.getContext(),android.R.layout.two_line_list_item,displayItems);
         //ArrayList<ListEntry> items = new ArrayList<ListEntry>();
         final RadioGroup radioGroup = (RadioGroup) v.findViewById(R.id.radioGroup);
 
@@ -104,17 +114,43 @@ public class SearchBarFragment extends Fragment {
             }
         });
 
-
         SearchButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+                adapter.clear();
                 String searchString = SearchBar.getText().toString();
-                String[] displayItems = databaseReturn(searchString,checked);
-                final ArrayAdapter<String> adapter = new ArrayAdapter<String>(v.getContext(),android.R.layout.simple_list_item_1,displayItems);
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                final DatabaseReference searchRef = database.getReference(searchString);
                 restaurantList.setAdapter(adapter);
+                searchRef.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        String value = dataSnapshot.getValue(String.class);
+                        adapter.add(value);
+                    }
 
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        String value = dataSnapshot.getValue(String.class);
+                        adapter.remove(value);
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("TAG:", "Failed to read value.");
+                    }
+                });
             }
         });
-
 
 
         restaurantList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
@@ -151,8 +187,8 @@ public class SearchBarFragment extends Fragment {
     }
 
 
-    public String[] databaseReturn(String search, boolean choice){
-        // choice false=rest true=food
+    public String[] databaseReturn(){
+
         //Todo: add database query that inserts data into the array
         String[] a  = {"Burger A","Burger B","Burger C","Burger D","Burger E","Burger F","Burger G"};
         return a;
