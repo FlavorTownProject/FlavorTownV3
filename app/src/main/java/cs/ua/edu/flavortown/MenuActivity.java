@@ -102,12 +102,21 @@ public class MenuActivity extends AppCompatActivity {
                                 Log.v(LOGTAG, "flag = "+ temp.getFlag());
                                 Log.v(LOGTAG, "adding food to menu");
                                 currMenu.addToFoodList(temp);
-
+                                Log.v(LOGTAG, "First two menu items after adding");
+                                Log.v(LOGTAG, "0 = " + currMenu.foodList[0].getFoodItem());
+                                Log.v(LOGTAG, "1 = " + currMenu.foodList[1].getFoodItem());
                             }
                             if(currMenu.length > 0){
                                 Log.v(LOGTAG, "Populated menu");
                                 //currMenu.sortItemsByRating();
+                                Log.v(LOGTAG, "First two menu items before setting currRest");
+                                Log.v(LOGTAG, "0 = " + currMenu.foodList[0].getFoodItem());
+                                Log.v(LOGTAG, "1 = " + currMenu.foodList[1].getFoodItem());
+                                currMenu.sortItemsByRating();
                                 currentRestuarant.setMenu(currMenu);
+                                Log.v(LOGTAG, "First two menu items after setting currRest");
+                                Log.v(LOGTAG, "0 = " + currMenu.foodList[0].getFoodItem());
+                                Log.v(LOGTAG, "1 = " + currMenu.foodList[1].getFoodItem());
                                 populateMenu(true);
                             }
                             else
@@ -149,7 +158,7 @@ public class MenuActivity extends AppCompatActivity {
         Food[] pullMenu = currentRestuarant.getMenu().getFoodList();
         String listItems[] = new String[currentRestuarant.getMenu().length];
         for(int x = 0; x < pullMenu.length; x++) {
-
+            Log.v(LOGTAG, "pullMenu[x] = "+ pullMenu[x].getFoodItem());
             listItems[x] = pullMenu[x].getFoodItem();
             Log.v(LOGTAG, x + " = " + listItems[x]);
         }
