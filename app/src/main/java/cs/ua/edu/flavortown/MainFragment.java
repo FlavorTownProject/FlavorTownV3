@@ -4,6 +4,7 @@ package cs.ua.edu.flavortown;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,6 +21,12 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.StreamDownloadTask;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 
 /**
@@ -46,6 +53,7 @@ public class MainFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    String LOGTAG = "MainFragment";
     //private OnFragmentInteractionListener mListener;
 
     public MainFragment() {
@@ -105,7 +113,7 @@ public class MainFragment extends Fragment {
 
         top10Button.setOnClickListener(new View.OnClickListener() {
             FirebaseDatabase database = FirebaseDatabase.getInstance();
-            final DatabaseReference myRef = database.getReference("top10");
+            final DatabaseReference myRef = database.getReference("restaurantTable");
             @Override
             public void onClick(View v){
                 String top10query = "a";
@@ -117,6 +125,229 @@ public class MainFragment extends Fragment {
                     public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                         String value = dataSnapshot.getValue(String.class);
                         adapter.add(value);
+
+                        String restID, restKey,restName;
+                        Food tempFood;
+                        int mLength = 0;
+
+                        List<Food> FoodList = new List<Food>() {
+                            @Override
+                            public int size() {
+                                return 0;
+                            }
+
+                            @Override
+                            public boolean isEmpty() {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean contains(Object o) {
+                                return false;
+                            }
+
+                            @NonNull
+                            @Override
+                            public Iterator<Food> iterator() {
+                                return null;
+                            }
+
+                            @NonNull
+                            @Override
+                            public Object[] toArray() {
+                                return new Object[0];
+                            }
+
+                            @NonNull
+                            @Override
+                            public <T> T[] toArray(T[] ts) {
+                                return null;
+                            }
+
+                            @Override
+                            public boolean add(Food food) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean remove(Object o) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean containsAll(Collection<?> collection) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean addAll(Collection<? extends Food> collection) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean addAll(int i, Collection<? extends Food> collection) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean removeAll(Collection<?> collection) {
+                                return false;
+                            }
+
+                            @Override
+                            public boolean retainAll(Collection<?> collection) {
+                                return false;
+                            }
+
+                            @Override
+                            public void clear() {
+
+                            }
+
+                            @Override
+                            public Food get(int i) {
+                                return null;
+                            }
+
+                            @Override
+                            public Food set(int i, Food food) {
+                                return null;
+                            }
+
+                            @Override
+                            public void add(int i, Food food) {
+
+                            }
+
+                            @Override
+                            public Food remove(int i) {
+                                return null;
+                            }
+
+                            @Override
+                            public int indexOf(Object o) {
+                                return 0;
+                            }
+
+                            @Override
+                            public int lastIndexOf(Object o) {
+                                return 0;
+                            }
+
+                            @Override
+                            public ListIterator<Food> listIterator() {
+                                return null;
+                            }
+
+                            @NonNull
+                            @Override
+                            public ListIterator<Food> listIterator(int i) {
+                                return null;
+                            }
+
+                            @NonNull
+                            @Override
+                            public List<Food> subList(int i, int i1) {
+                                return null;
+                            }
+                        };
+                        String foodIter;
+                        try {
+                            Log.v(LOGTAG, "in onDataChange");
+                            for(DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+                                restKey = messageSnapshot.getKey();
+                                restName = (String) messageSnapshot.child("restName").getValue();
+                                Log.v(LOGTAG, "name = " + restName);
+                                restID = (String) messageSnapshot.child("id").getValue();
+                                Log.v(LOGTAG, "id = " + restID);
+                                for (int x = 0; x < mLength; x++) {
+                                    tempFood = new Food();
+                                    tempFood.setRestKey(restKey);
+                                    foodIter = stringIncrementer("food", x);
+                                    tempFood.setFoodItem(messageSnapshot.child("menu").child(foodIter).child("name").getValue(String.class));
+                                    tempFood.setNumOfRating(messageSnapshot.child("menu").child(foodIter).child("numOfRatings").getValue(int.class));
+                                    if (tempFood.getNumOfRating() > 0) {
+                                        Log.v(LOGTAG, "Getting ratings");
+                                        float tempRate[] = new float[tempFood.getNumOfRating()];
+                                        for (int y = 0; y < tempRate.length; y++) {
+                                            tempRate[y] = messageSnapshot.child("menu").child(foodIter).child("rating").child(String.valueOf(y)).getValue(float.class);
+                                            Log.v(LOGTAG, "Rating " + String.valueOf(y) + " = " + String.valueOf(tempRate[y]));
+                                        }
+                                        tempFood.setRatings(tempRate);
+                                        Log.v(LOGTAG, "Set ratings (may need double check)");
+                                        tempFood.calcCurrRating();//do the math for currentRating
+                                        Log.v(LOGTAG, "currRating set to " + String.valueOf(tempFood.getCurrRating()));
+                                    } else {
+                                        Log.v(LOGTAG, "No ratings found");
+                                        tempFood.setRatings(null);
+                                        Log.v(LOGTAG, "Set ratings to null and currRating to 0");
+                                        tempFood.setCurrRating(0);
+                                    }
+                                    tempFood.setFlag((String) messageSnapshot.child("menu").child(foodIter).child("flag").getValue());
+                                    tempFood.setIterTag(foodIter);
+                                    Log.v(LOGTAG, "flag = " + tempFood.getFlag());
+                                    Log.v(LOGTAG, "adding food to menu");
+                                    FoodList.add(tempFood); //currMenu.addToFoodList(temp);
+                                }
+                            }
+                            //Lists are filled, commence calculations
+
+                            Iterator<Food> foodIterator = FoodList.iterator();
+
+
+                            Food topTenFood[] = new Food[10];
+                            Food bump1 = new Food();
+                            Food bump2 = new Food();
+                            int pulled = 0;
+                            while(foodIterator.hasNext())
+                            {
+                                tempFood = foodIterator.next();
+                                if(pulled < 10)
+                                {
+                                    topTenFood[pulled] = tempFood;
+                                    pulled++;
+                                    if(pulled == 10)
+                                        sortTopTen(topTenFood);
+                                }
+                                else{
+                                    for(int x = 0; x < 10; x++)
+                                    {
+                                        if ( x == 0 && tempFood.getCurrRating() <= topTenFood[x].getCurrRating())
+                                            break;
+                                        else if(tempFood.getCurrRating() <= topTenFood[x].getCurrRating())
+                                        {
+                                            bump1.copyFood(topTenFood[x - 1]);
+                                            topTenFood[x - 1].copyFood(tempFood);
+                                            for(int y = x - 2; y >= 0; y--)
+                                            {
+                                                bump2.copyFood(topTenFood[y]);
+                                                topTenFood[y].copyFood(bump1);
+                                                bump1.copyFood(bump2);
+                                            }
+                                            break;
+                                        }
+                                        else if ( x ==  9 && tempFood.getCurrRating() >= topTenFood[x].getCurrRating())
+                                        {
+                                            bump1.copyFood(topTenFood[x]);
+                                            topTenFood[x].copyFood(tempFood);
+                                            for(int y = x - 1; y >= 0; y--)
+                                            {
+                                                bump2.copyFood(topTenFood[y]);
+                                                topTenFood[y].copyFood(bump1);
+                                                bump1.copyFood(bump2);
+                                            }
+                                            break;
+                                        }
+                                    }
+                                }
+                            }//end of while iter.hasNext()
+
+
+                        }
+                        catch( Exception e){
+                            e.printStackTrace();
+                        }
+
                     }
 
                     @Override
@@ -208,5 +439,27 @@ public class MainFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @NonNull
+    private String stringIncrementer(String baseString, int value) {
+        return baseString.concat(String.valueOf(value));
+    }
+
+    private void sortTopTen(Food[] top)
+    {
+        Food temp = new Food();
+        for(int x = 0; x < 10 ; x++)
+        {
+            for(int y = x+1 ; y < 10 ; y++)
+            {
+                if(top[x].getCurrRating() < top[y].getCurrRating())
+                {
+                    temp.copyFood(top[x]);
+                    top[x].copyFood(top[y]);
+                    top[y].copyFood(temp);
+                }
+            }
+        }
     }
 }

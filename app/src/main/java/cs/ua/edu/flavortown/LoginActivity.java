@@ -73,9 +73,6 @@ public class LoginActivity extends AppCompatActivity {
                     for(DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
                         String emailDB = (String) messageSnapshot.child("email").getValue();
                         String passwordDB = (String) messageSnapshot.child("password").getValue();
-
-                        Log.v("LogAct",emailDB);
-                        Log.v("LogAct",passwordDB);
                         if (!(enteredInfo.getEmail().equals(emailDB))) {
                             loginValue = 0;
                         }
