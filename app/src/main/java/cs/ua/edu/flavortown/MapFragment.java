@@ -67,8 +67,8 @@ public class MapFragment extends SupportMapFragment implements OnMapReadyCallbac
     //Back up Key (Flavortown): 	AIzaSyA2pbTswWHv5NslX4e35AWEu-PiCbMe3wY
     //Back up 2: AIzaSyDK6GB-RTPuNRZIKpsLd0mUE667t3KXqM4
     //
-    private static String gpURL = "https://maps.googleapis.com/maps/api/place/textsearch/json?&key=AIzaSyDZzxLsGBZ2aefPmsyGzpdB63OVpvc8PNY&query=hamburgers";//AIzaSyDU5KCvghYUqvJdkMY7OBo2mr8jsAEvHqY";
-    static String detailURL = "https://maps.googleapis.com/maps/api/place/details/json?&key=AIzaSyDZzxLsGBZ2aefPmsyGzpdB63OVpvc8PNY";
+    private static String gpURL = "https://maps.googleapis.com/maps/api/place/textsearch/json?&key=AIzaSyA2pbTswWHv5NslX4e35AWEu-PiCbMe3wY&query=hamburgers";//AIzaSyDU5KCvghYUqvJdkMY7OBo2mr8jsAEvHqY";
+    static String detailURL = "https://maps.googleapis.com/maps/api/place/details/json?&key=AIzaSyA2pbTswWHv5NslX4e35AWEu-PiCbMe3wY";
 
 
     private JSONObject jsonIDS;

@@ -24,12 +24,13 @@ public class FoodActivity extends AppCompatActivity {
     // Hardcoded for right now
     String queryName;
     //String queryName = "chat";
-
     String foodName; //From Opening From List
+
     TextView mFoodName;
     RatingBar mFoodRatingBar;
     TextView mFoodRatingValue;
     Button mFoodButtonRate;
+    Button mFoodButtonCancle;
 
     DatabaseReference mRootRef;
     DatabaseReference mFoodRef;
@@ -44,14 +45,15 @@ public class FoodActivity extends AppCompatActivity {
         final Bundle extras = getIntent().getExtras();
         restKey = extras.getString("restaurantKey");
         foodKey = extras.getString("foodIterator");
-        Log.v("FoodActivity","foodkey is null :"+ String.valueOf(foodKey == null));
+        //Log.v("FoodActivity","foodkey is null :"+ String.valueOf(foodKey == null));
         foodName = extras.getString("restaurantName");
         queryName = "restaurantTable/" + restKey + "/menu/" + foodKey;
 
         mFoodName = (TextView) findViewById(R.id.txtFoodName);
         mFoodRatingBar = (RatingBar) findViewById(R.id.barFoodRatingBar);
         mFoodRatingValue = (TextView) findViewById(R.id.txtFoodRatingValue);
-        mFoodButtonRate = (Button) findViewById(R.id.buttonFoodRate);
+        mFoodButtonRate = (Button) findViewById(R.id.mFoodButtonRate);
+        mFoodButtonCancle = (Button) findViewById(R.id.mFoodButtonCancle);
 
         mFoodName.setText(extras.getString("foodName"));
         mFoodRatingBar.setRating(extras.getFloat("foodCurrRating"));
@@ -67,13 +69,6 @@ public class FoodActivity extends AppCompatActivity {
         mFoodButtonRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //Log.v("FoodActivity", "Rate Button Pressed");
-                //Log.v("FoodStuff", foodName);
-                //Log.v("FoodStuff", foodKey);
-                //Log.v("FoodStuff", Float.toString(extras.getFloat("foodCurrRating")));
-                //Log.v("FoodStuff", Float.toString(extras.getInt("foodNumOfRatings")));
-                //Log.v("FoodStuff", restKey);
-
                 Intent rateScreen = new Intent(getBaseContext(), RatingActivity.class);
                     rateScreen.putExtra("foodName", foodName);
                     rateScreen.putExtra("foodIterator", foodKey);
@@ -83,6 +78,13 @@ public class FoodActivity extends AppCompatActivity {
                     rateScreen.putExtra("foodRatings", extras.getString("foodRatings"));
                     rateScreen.putExtra("restaurantID", extras.getString("restaurantID"));
                 startActivity(rateScreen);
+            }
+        });
+
+        mFoodButtonCancle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
     }

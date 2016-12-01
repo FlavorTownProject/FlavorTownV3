@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_rating_bar"
+    android:id="@+id/numOfRatingsNum"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -11,65 +11,58 @@
     tools:context="cs.ua.edu.flavortown.FoodActivity">
 
     <Button
-        android:text="Rate Food"
+        android:text="Rate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/buttonFoodRate"
-        android:layout_marginTop="34dp"
-        android:layout_below="@+id/linearLayout1"
-        android:layout_centerHorizontal="true" />
+        android:id="@+id/mFoodButtonRate"
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/barFoodRatingBar" />
 
-    <LinearLayout
-        android:id="@+id/linearLayout1"
+    <Button
+        android:text="Cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="27dp"
-        android:layout_below="@+id/barFoodRatingBar"
-        android:layout_alignEnd="@+id/buttonFoodRate">
+        android:id="@+id/mFoodButtonCancle"
+        android:layout_alignBaseline="@+id/mFoodButtonRate"
+        android:layout_alignBottom="@+id/mFoodButtonRate"
+        android:layout_alignEnd="@+id/barFoodRatingBar" />
 
-        <TextView
-            android:id="@+id/txtFoodRatingValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="30sp" />
-
-    </LinearLayout>
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="16dp"
+        android:layout_below="@+id/mFoodButtonRate"
+        android:layout_alignParentStart="true"
+        android:id="@+id/listComments" />
 
     <TextView
         android:text="Food Item"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="35dp"
+        android:layout_marginTop="16dp"
         android:id="@+id/txtFoodName"
         android:textSize="36sp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" />
 
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/buttonFoodRate"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="53dp"
-        android:id="@+id/listComments" />
-
     <RatingBar
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="25dp"
         android:id="@+id/barFoodRatingBar"
         android:layout_below="@+id/txtFoodName"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp" />
 
     <TextView
-        android:id="@+id/lblResult"
-        android:layout_width="wrap_content"
+        android:id="@+id/txtFoodRatingValue"
         android:layout_height="wrap_content"
-        android:text="Rating : "
-        android:layout_alignTop="@+id/linearLayout1"
-        android:layout_alignStart="@+id/barFoodRatingBar"
-        android:textSize="24sp" />
+        android:text="Rating"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:layout_width="wrap_content"
+        android:textAlignment="viewStart"
+        android:textSize="30sp"
+        android:layout_below="@+id/barFoodRatingBar"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="12dp" />
 
 </RelativeLayout>

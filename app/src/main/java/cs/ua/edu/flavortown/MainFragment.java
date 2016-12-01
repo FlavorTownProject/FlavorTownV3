@@ -105,7 +105,7 @@ public class MainFragment extends Fragment {
         moodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                Intent intent = new Intent(getContext(), MoodActivity.class);
+                Intent intent = new Intent(getContext(), FoodActivity.class);
                 startActivity(intent);
             }
         });

@@ -43,27 +43,15 @@
                 android:layout_marginBottom="5dp" >
 
                 <Button
-                    android:id="@+id/btn_cancel"
-                    android:layout_width="100dp"
-                    android:layout_marginRight="10dp"
-                    android:text="Cancle"
-                    android:textSize="12sp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginEnd="12dp"
-                    android:layout_alignParentTop="true"
-                    android:fontFamily="sans-serif"
-                    android:layout_height="50dp" />
-
-                <Button
                     android:id="@+id/btn_submit"
                     android:layout_width="100dp"
                     android:layout_marginLeft="10dp"
                     android:text="Submit"
                     android:textSize="12sp"
-                    android:layout_alignParentTop="true"
-                    android:layout_alignParentStart="true"
                     android:fontFamily="sans-serif"
-                    android:layout_height="50dp" />
+                    android:layout_height="50dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true" />
             </RelativeLayout>
 
             <RelativeLayout

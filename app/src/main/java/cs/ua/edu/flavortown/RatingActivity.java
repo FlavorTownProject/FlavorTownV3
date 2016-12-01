@@ -24,10 +24,10 @@ public class RatingActivity extends AppCompatActivity {
     RatingBar mRatingBar;
     TextView mTextRating;
     Button mButtonSubmit;
-    Button mButtonCancel;
     EditText mComments;
 
     DatabaseReference mRootRef;
+    DatabaseReference mRootRefTable;
     DatabaseReference mRatingListRef;
     DatabaseReference mRatingNumber;
     DatabaseReference mNumOfRatingRef;
@@ -73,7 +73,6 @@ public class RatingActivity extends AppCompatActivity {
         mComments = (EditText) findViewById(R.id.txt_description);
         mTextRating = (TextView) findViewById(R.id.txt_food);
         mButtonSubmit = (Button) findViewById(R.id.btn_submit);
-        mButtonCancel = (Button) findViewById(R.id.btn_cancel);
 
         mRatingNumber.addValueEventListener(new ValueEventListener() {
             @Override
@@ -107,10 +106,15 @@ public class RatingActivity extends AppCompatActivity {
                     public void onComplete(DatabaseError databaseError, boolean b, DataSnapshot dataSnapshot) {
                     }
                 });
-                mRatingNumber.runTransaction(new Transaction.Handler() {
+                /*
+                mRootRefTable.runTransaction(new Transaction.Handler() {
                     @Override
                     public Transaction.Result doTransaction(MutableData mutableData) {
-
+                        float currRatingNum = mutableData.child("currRating").getValue(float.class);
+                        long numOfRatingsNum = mutableData.child("rating").getChildrenCount();
+                        float newRatingNum = mRatingBar.getRating();
+                        //float newNum = (((currRatingNum * numOfRatingsNum) + newRatingNum) / (numOfRatingsNum + 1));
+                        //mutableData.child("currRating").setValue(newNum);
                         return Transaction.success(mutableData);
                     }
 
@@ -119,12 +123,7 @@ public class RatingActivity extends AppCompatActivity {
 
                     }
                 });
-            }
-        });
-
-        mButtonCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+                */
                 finish();
             }
         });
