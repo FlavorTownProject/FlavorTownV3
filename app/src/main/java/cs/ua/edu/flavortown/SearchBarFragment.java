@@ -365,11 +365,11 @@ public class SearchBarFragment extends Fragment {
                             for(int x = 0; x < menuLen && numOfTimes < 10; x++){
                                 tagIter = "food".concat(String.valueOf(x));
                                 temp.setFoodItem( (String) messageSnapshot.child("menu").child(tagIter).child("name").getValue());
-                                temp.setNumOfRating(messageSnapshot.child("menu").child(tagIter).child("numOfRating").getValue(int.class));
-                            //    temp.setCurrRating((float)messageSnapshot.child("menu").child(tagIter).child("currRating").getValue());
-                                Log.v(LOGTAG, String.valueOf(restNumber));
-                                Log.v(LOGTAG, tagIter);
-                                if(temp.getNumOfRating() > 0)
+//                                temp.setNumOfRating(messageSnapshot.child("menu").child(tagIter).child("numOfRating").getValue(int.class));
+//                            //    temp.setCurrRating((float)messageSnapshot.child("menu").child(tagIter).child("currRating").getValue());
+//                                Log.v(LOGTAG, String.valueOf(restNumber));
+//                                Log.v(LOGTAG, tagIter);
+/*                                if(temp.getNumOfRating() > 0)
                                 {
                                     Log.v(LOGTAG,"Getting ratings");
                                     Log.v(LOGTAG, String.valueOf(temp.getNumOfRating()));
@@ -389,7 +389,7 @@ public class SearchBarFragment extends Fragment {
                                     Log.v(LOGTAG, "Set ratings to null and currRating to 0");
                                     temp.setCurrRating(0);
                                 }
-                                temp.setFlag((String) messageSnapshot.child("menu").child(tagIter).child("flag").getValue());
+                                temp.setFlag((String) messageSnapshot.child("menu").child(tagIter).child("flag").getValue());*/
                                 temp.setIterTag(tagIter);
 
 
