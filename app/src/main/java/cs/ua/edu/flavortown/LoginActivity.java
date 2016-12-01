@@ -34,6 +34,8 @@ public class LoginActivity extends AppCompatActivity {
         mRootRef = FirebaseDatabase.getInstance().getReference();
         mUserTableRef = mRootRef.child("UserTable");
 
+        attemptLogin("", "");
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -58,7 +60,7 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(v.getContext(), "Login Successful", Toast.LENGTH_SHORT).show();
                 Intent nextScreen = new Intent(v.getContext(), MainActivity.class);
                 startActivity(nextScreen);
-                setContentView(R.layout.activity_main);
+                //setContentView(R.layout.activity_main);
             }
         });
 
