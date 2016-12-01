@@ -49,6 +49,7 @@ public class MenuActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         currentRestuarant.setRestName(extras.getString("restaurantName"));
         currentRestuarant.setGoogleID(extras.getString("restaurantID"));
+        currentRestuarant.setDbKey(extras.getString("restaurantKey"));
         restaurantName.setText("TOP ITEM: " + extras.getString("restaurantName"));
 
         topItemButton = (Button) findViewById(R.id.topItemButton);
@@ -65,12 +66,14 @@ public class MenuActivity extends AppCompatActivity {
                 try {
                     Log.v(LOGTAG, "in onDataChange");
                     for(DataSnapshot messageSnapshot: dataSnapshot.getChildren()){
-                        messageSnapshot.getKey();
+
                         String name = (String) messageSnapshot.child("restName").getValue();
                         Log.v(LOGTAG,"name = "+ name);
                         ID = (String) messageSnapshot.child("id").getValue();
                         Log.v(LOGTAG,"id = "+ ID);
                         if(ID.equals(currentRestuarant.getGoogleID())) {
+                            currentRestuarant.setDbKey(messageSnapshot.getKey());
+                            Log.v(LOGTAG, "currentRestuarantDBKey = " +currentRestuarant.getDbKey());
                             Log.v(LOGTAG, messageSnapshot.getValue().toString());
                             Log.v(LOGTAG, "menuLength = "+ String.valueOf(messageSnapshot.child("menuLength").getValue(int.class)));
                             Menu currMenu = new Menu(messageSnapshot.child("menuLength").getValue(int.class));
