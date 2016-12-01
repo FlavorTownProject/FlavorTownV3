@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,12 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 
 /**
@@ -31,7 +38,7 @@ public class MainFragment extends Fragment {
     private Button top10Button;
     private Button moodButton;
     private Button historyButton;
-    private  ArrayAdapter<String> adapter;
+    private ArrayAdapter<String> adapter;
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
@@ -93,24 +100,86 @@ public class MainFragment extends Fragment {
 
         final ListView mainList = (ListView) v.findViewById(R.id.WFlistview);
 
+        //FirebaseDatabase database = FirebaseDatabase.getInstance();
+        //final DatabaseReference myRef = database.getReference("top10");
 
         top10Button.setOnClickListener(new View.OnClickListener() {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            final DatabaseReference myRef = database.getReference("top10");
             @Override
             public void onClick(View v){
                 String top10query = "a";
-                String[] displayItems = databaseReturn(top10query);  //TODO: Fill in functions
-                adapter = new ArrayAdapter<String>(v.getContext(),android.R.layout.simple_list_item_1,displayItems);
+                adapter = new ArrayAdapter<>(v.getContext(),
+                        android.R.layout.simple_list_item_1, android.R.id.text1);
                 mainList.setAdapter(adapter);
+                myRef.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        String value = dataSnapshot.getValue(String.class);
+                        adapter.add(value);
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        String value = dataSnapshot.getValue(String.class);
+                        adapter.remove(value);
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("TAG:", "Failed to read value.");
+                    }
+                });
             }
         });
 
         historyButton.setOnClickListener(new View.OnClickListener() {
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            final DatabaseReference myRef = database.getReference("history");
             @Override
             public void onClick(View v){
                 String historyquery = "b";
-                String[] displayItems = databaseReturn(historyquery);  //TODO: FIll in functions
-                adapter = new ArrayAdapter<String>(v.getContext(),android.R.layout.simple_list_item_1,displayItems);
+                adapter = new ArrayAdapter<>(v.getContext(),
+                        android.R.layout.simple_list_item_1, android.R.id.text1);
                 mainList.setAdapter(adapter);
+                myRef.addChildEventListener(new ChildEventListener() {
+                    @Override
+                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                        String value = dataSnapshot.getValue(String.class);
+                        adapter.add(value);
+                    }
+
+                    @Override
+                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                        String value = dataSnapshot.getValue(String.class);
+                        adapter.remove(value);
+                    }
+
+                    @Override
+                    public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+                    }
+
+                    @Override
+                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                        Log.w("TAG:", "Failed to read value.");
+                    }
+                });
             }
         });
 

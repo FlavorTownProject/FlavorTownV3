@@ -1,8 +1,10 @@
 package cs.ua.edu.flavortown;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
@@ -143,7 +145,12 @@ public class MenuActivity extends AppCompatActivity {
             }
         });
 
-
+         topItemButton.setOnClickListener(new View.OnClickListener() {
+             @Override
+             public void onClick(View view) {
+                 openFood(true);
+             }
+         });
 
 
 
@@ -187,6 +194,18 @@ public class MenuActivity extends AppCompatActivity {
             topItemButton.setText("Menu is not available for this restaurant");
         }
     }
+
+    private void openFood(boolean menuIsNotNull)
+    {
+        String fooditem;
+        if (menuIsNotNull) {
+            fooditem = currentRestuarant.getMenu().getHighestRatedItem().getFoodItem();
+            Intent foodScreen = new Intent(this, FoodActivity.class);
+            foodScreen.putExtra("foodName", fooditem);
+            startActivity(foodScreen);
+        }
+    }
+
 
 
 }

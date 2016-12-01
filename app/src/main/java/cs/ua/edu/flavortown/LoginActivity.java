@@ -3,6 +3,7 @@ package cs.ua.edu.flavortown;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +18,9 @@ import com.google.firebase.database.ValueEventListener;
 public class LoginActivity extends AppCompatActivity {
     DatabaseReference mRootRef;
     DatabaseReference mUserTableRef;
+
+    User enteredInfo;
+    int loginValue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,24 +39,13 @@ public class LoginActivity extends AppCompatActivity {
 
                 String email = editEmail.getText().toString();
                 String password = editPassword.getText().toString();
-
-                int attempt = attemptLogin(email,password);
-
-                if (attempt == 1) {//TODO: Credential Verification
-                    Toast.makeText(v.getContext(), "Login Successful", Toast.LENGTH_SHORT).show();
-                    Intent nextScreen = new Intent(v.getContext(), MainActivity.class);
-                    startActivity(nextScreen);
-                    setContentView(R.layout.activity_main);
-                } else {
-                    Toast.makeText(v.getContext(), "Login Failed", Toast.LENGTH_SHORT).show();
-                    editPassword.setText("");
-                }
+                attemptLogin(email, password);
 
                 /*
-                if (attempt == 0){
+                if (loginValue == 0){
                     Toast.makeText(v.getContext(), "Username Incorrect", Toast.LENGTH_SHORT).show();
                 }
-                else if (attempt == 1){
+                else if (loginValue == 1){
                     Toast.makeText(v.getContext(), "Password Incorrect", Toast.LENGTH_SHORT).show();
                 }
                 else{
@@ -61,8 +54,11 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(nextScreen);
                     setContentView(R.layout.activity_main);
                 }
-
-                 */
+                */
+                Toast.makeText(v.getContext(), "Login Successful", Toast.LENGTH_SHORT).show();
+                Intent nextScreen = new Intent(v.getContext(), MainActivity.class);
+                startActivity(nextScreen);
+                setContentView(R.layout.activity_main);
             }
         });
 
@@ -97,14 +93,47 @@ public class LoginActivity extends AppCompatActivity {
         return password.length() > 4;
     }
 
-    private int attemptLogin(String email, String password) {
-        return 1;
-        /*
-        if (!isEmailValid(email)){ return -1; }
-        else if (!isPasswordValid(password)){ return 0; }
-        return 1;
+    private void attemptLogin(String email, String password) {
+        //return 1;
+        enteredInfo = new User();
+        enteredInfo.setEmail(email);
+        enteredInfo.setPassword(password);
 
-         */
+        final FirebaseDatabase db = FirebaseDatabase.getInstance();
+        mUserTableRef = db.getReference("userTable");
+        mUserTableRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                String ID ="";
+                try{
+                    //Log.v(LOGTAG, "in onDataChange");
+                    for(DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
+                        String emailDB = (String) messageSnapshot.child("email").getValue();
+                        if (!(enteredInfo.getEmail().equals(emailDB))) {
+                            loginValue = 0;
+                            break;
+                        }
+
+                        String passwordDB = (String) messageSnapshot.child("password").getValue();
+                        if (!enteredInfo.getPassword().equals(passwordDB)) {
+                            loginValue = 1;
+                            break;
+                        }
+                        else{
+                            loginValue = 2;
+                        }
+                    }
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
 
     }
 
