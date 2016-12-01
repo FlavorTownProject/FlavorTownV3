@@ -19,6 +19,7 @@
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -31,24 +32,21 @@
             android:name=".MainActivity"
             android:label="@string/title_activity_main"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".RatingActivity"
             android:exported="true"
-            android:screenOrientation="portrait"></activity>
-
+            android:screenOrientation="portrait" />
         <activity
             android:name=".FoodActivity"
-            android:label="Food Items"
             android:exported="true"
-            android:screenOrientation="portrait"></activity>
-
+            android:label="Food Items"
+            android:screenOrientation="portrait" />
         <activity
             android:name=".MoodActivity"
-            android:label="Mood"
             android:exported="true"
-            android:screenOrientation="portrait"></activity>
+            android:label="Mood"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.google.android.gms.version"
@@ -57,7 +55,8 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyDU5KCvghYUqvJdkMY7OBo2mr8jsAEvHqY" />
 
-        <activity android:name=".MenuActivity"></activity>
+        <activity android:name=".MenuActivity" />
+        <activity android:name=".settingsActivity"></activity>
     </application>
 
 </manifest>

@@ -135,6 +135,16 @@ public class SearchBarFragment extends Fragment {
                String a = (String) parent.getItemAtPosition(position);
                 if(checked){
                     //Pass a into Food Fragment
+                    //Intent foodActivity = new Intent(getActivity(), FoodActivity.class);
+                    Intent foodScreen = new Intent(getActivity(), FoodActivity.class);
+                    foodScreen.putExtra("foodName", foodArr[position].getFoodItem());
+                    foodScreen.putExtra("foodIterator",foodArr[position].getIterTag());
+                    foodScreen.putExtra("foodCurrRating", foodArr[position].getCurrRating());
+                    foodScreen.putExtra("foodNumOfRatings", foodArr[position].getNumOfRating());
+                    foodScreen.putExtra("foodRatings", foodArr[position].getRatings());
+                    foodScreen.putExtra("restaurantID",foodArr[position].getRestTag());
+                    foodScreen.putExtra("restaurantKey", foodArr[position].getRestID());
+                    startActivity(foodScreen);
                 }
                 else{
                     int location = 0;
@@ -163,7 +173,8 @@ public class SearchBarFragment extends Fragment {
                 search = searchString;
                 Log.v("SearchFragment", "search after click : " +search);
                 if (checked) {
-                    //foodDatabaseReturn(searchString);
+                    adapter.clear();
+                    foodDatabaseReturn();
                     //displayItems = new String[foodArr.length];
                 }
                 else{
@@ -328,36 +339,94 @@ public class SearchBarFragment extends Fragment {
         });
         return true;
     }
-    public void foodDatabaseReturn(String search){ return;}
-        /*// choice false=rest true=food
+    public void foodDatabaseReturn() {
+        // choice false=rest true=food
         //Todo: add database query that inserts data into the array
         final FirebaseDatabase db = FirebaseDatabase.getInstance();
-        DatabaseReference foodTable = db.getReference("foodTable");
+        DatabaseReference restaurantTable = db.getReference("restaurantTable");
 
         //DatabaseReference foodTable = restaurantTable.child("foodTable");
-        foodTable.addValueEventListener(new ValueEventListener() {
+        restaurantTable.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 int numOfTimes = 0;
-                LinkedList<String> list = new LinkedList<String>();
-                try{
-                    for(DataSnapshot messageSnapshot: dataSnapshot.getChildren()){
-                        if (numOfTimes == 10){
+                int restNumber = 0;
+                LinkedList<Food> list = new LinkedList<Food>();
+                try {
+                    for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
+                        if (numOfTimes == 10) {
                             break;
-                        }
-                        else{
-                            String name = (String) messageSnapshot.child("name").getValue();
-                            if(name.startsWith(search)){
-                                list.add(name);
-                                numOfTimes++;
+                        } else {
+                            String rest = (String) messageSnapshot.child("restName").getValue();
+                            int menuLen = messageSnapshot.child("menuLength").getValue(int.class);
+                            Food temp = new Food();
+                            String tagIter;
+                            for(int x = 0; x < menuLen && numOfTimes < 10; x++){
+                                tagIter = "food".concat(String.valueOf(x));
+                                temp.setFoodItem( (String) messageSnapshot.child("menu").child(tagIter).child("name").getValue());
+                                temp.setNumOfRating(messageSnapshot.child("menu").child(tagIter).child("numOfRating").getValue(int.class));
+                            //    temp.setCurrRating((float)messageSnapshot.child("menu").child(tagIter).child("currRating").getValue());
+                                Log.v(LOGTAG, String.valueOf(restNumber));
+                                Log.v(LOGTAG, tagIter);
+                                if(temp.getNumOfRating() > 0)
+                                {
+                                    Log.v(LOGTAG,"Getting ratings");
+                                    Log.v(LOGTAG, String.valueOf(temp.getNumOfRating()));
+                                    float tempRate[] = new float[temp.getNumOfRating()];
+                                    for(int y = 0; y < tempRate.length; y++) {
+                                        tempRate[y] =  messageSnapshot.child("menu").child(tagIter).child("rating").child(String.valueOf(y)).getValue(float.class);
+                                        Log.v(LOGTAG, "Rating "+ String.valueOf(y) +" = "+ String.valueOf(tempRate[y]) );
+                                    }
+                                    temp.setRatings(tempRate);
+                                    Log.v(LOGTAG, "Set ratings (may need double check)" );
+                                    temp.calcCurrRating();//do the math for currentRating
+                                    Log.v(LOGTAG,"currRating set to "+ String.valueOf(temp.getCurrRating()));
+                                }
+                                else{
+                                    Log.v(LOGTAG, "No ratings found");
+                                    temp.setRatings(null);
+                                    Log.v(LOGTAG, "Set ratings to null and currRating to 0");
+                                    temp.setCurrRating(0);
+                                }
+                                temp.setFlag((String) messageSnapshot.child("menu").child(tagIter).child("flag").getValue());
+                                temp.setIterTag(tagIter);
+
+
+                                if(temp.getFoodItem().startsWith(search)){
+                                    //temp.setIterTag(tagIter);
+                                    temp.setRestTag("rest".concat(String.valueOf(restNumber)));
+                                    temp.setRestaurant(rest);
+                                    temp.setRestID((String)messageSnapshot.child("id").getValue());
+                                    list.add(temp);
+                                    numOfTimes++;
+                                }
                             }
                         }
+                        restNumber++;
                     }
-                }
-                catch(Exception e){
+                    foodArr = list.toArray(new Food[list.size()]);
+                    Log.v("SearchBarFragment", "foodarray "+foodArr[0].getRestaurant());
+
+                    if (foodArr != null) {
+                        Log.v("SearchBarFragment", "starting to display food items");
+                        displayItems = new String[foodArr.length];
+                        for (int i = 0; i < displayItems.length; i++) {
+                            String foodName = foodArr[i].getFoodItem();
+                            String foodAddress = foodArr[i].getRestaurant();
+                            //String foodRating = String.valueOf(foodArr[i].getCurrRating());
+                            displayItems[i] = foodName.concat("\n").concat(foodAddress);
+                            adapter.add(displayItems[i]);
+                        }
+                        //restaurantArr = null;
+                        //displayItems = null;
+                    }else{
+                        adapter.add("No results found");
+                    }
+                    restaurantList.setAdapter(adapter);
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
-                foodArr = list.toArray(new String[list.size()]);
+
             }
 
             @Override
@@ -365,7 +434,7 @@ public class SearchBarFragment extends Fragment {
 
             }
         });
-    }*/
+    }
 
 //    @Override
 //    public void onAttach(Context context) {
