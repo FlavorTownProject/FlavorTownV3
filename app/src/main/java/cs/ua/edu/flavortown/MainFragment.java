@@ -21,13 +21,13 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.StreamDownloadTask;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -414,26 +414,41 @@ public class MainFragment extends Fragment {
             }
         });
 
-        mainList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
-            //@Override
-            public  void onItemClick(AdapterView<?> parent,View v,int position, long id){
-                //Object a = restaurantList.getSelectedItem();
-                String a =  (String) parent.getItemAtPosition(position);
+        mainList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
 
-                Toast.makeText(v.getContext(), a, Toast.LENGTH_SHORT).show();
-            }
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                final DatabaseReference myRef = database.getReference("history");
 
+                Query myQuery = myRef.orderByValue().equalTo((String)
+                        mainList.getItemAtPosition(position));
 
+                myQuery.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.hasChildren()) {
+                            DataSnapshot firstChild = dataSnapshot.getChildren().iterator().next();
+                            firstChild.getRef().removeValue();
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+                    }
+                })
+                ;}
         });
 
+        mainList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+            public  void onItemClick(AdapterView<?> parent,View v,int position, long id){
+                String a =  (String) parent.getItemAtPosition(position);
+                Intent nextScreen = new Intent(v.getContext(), FoodActivity.class);
+                nextScreen.putExtra("foodName", a);
+                startActivity(nextScreen);
+            }
+        });
         return v;
-    }
-
-    public String[] databaseReturn(String query){
-
-        //Todo: add database query that inserts data into the array
-        String[] result  = {query,query+query,query+query+query,query+query+query+query,query+query+query+query+query,query+query+query+query,"Burger G"};
-        return result;
     }
 
     public interface OnFragmentInteractionListener {

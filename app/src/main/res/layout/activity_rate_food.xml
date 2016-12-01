@@ -6,7 +6,9 @@
     <RelativeLayout
         android:id="@+id/activity_rate_food"
         android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
 
         <RelativeLayout
             android:id="@+id/dialog_box"
@@ -25,7 +27,7 @@
                      android:layout_height="wrap_content"
                      android:text="Rating"
                      android:textColor="@color/bodyTextColor"
-                     android:textSize="20dp"
+                     android:textSize="30sp"
                      android:textStyle="bold"
                      android:layout_alignParentTop="true"
                      android:layout_centerHorizontal="true">
@@ -43,25 +45,25 @@
                 <Button
                     android:id="@+id/btn_cancel"
                     android:layout_width="100dp"
-                    android:layout_height="30dp"
                     android:layout_marginRight="10dp"
                     android:text="Cancle"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="12dp"
                     android:layout_alignParentTop="true"
-                    android:fontFamily="sans-serif" />
+                    android:fontFamily="sans-serif"
+                    android:layout_height="50dp" />
 
                 <Button
                     android:id="@+id/btn_submit"
                     android:layout_width="100dp"
-                    android:layout_height="30dp"
                     android:layout_marginLeft="10dp"
                     android:text="Submit"
-                    android:textSize="10sp"
+                    android:textSize="12sp"
                     android:layout_alignParentTop="true"
                     android:layout_alignParentStart="true"
-                    android:fontFamily="sans-serif" />
+                    android:fontFamily="sans-serif"
+                    android:layout_height="50dp" />
             </RelativeLayout>
 
             <RelativeLayout
@@ -81,8 +83,7 @@
                     android:background="@android:color/transparent"
                     android:gravity="center"
                     android:hint="Comment Here"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/cardview_dark_background" />
+                    android:textSize="24sp" />
 
                 <RatingBar
                     android:id="@+id/rateButton"
@@ -90,9 +91,9 @@
                     android:layout_height="wrap_content"
                     android:scaleX="0.7"
                     android:scaleY="0.7"
-                    android:stepSize="1.0"
                     android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true" />
+                    android:layout_centerHorizontal="true"
+                    android:isIndicator="false" />
             </RelativeLayout>
 
         </RelativeLayout>

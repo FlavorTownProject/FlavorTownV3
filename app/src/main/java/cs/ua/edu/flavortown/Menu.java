@@ -35,7 +35,7 @@ public class Menu {
             Log.v("addToFoodList", "currentIndex = "+ currentIndex+ " | length = "+ length);
             Log.v("addToFoodList", "foodList["+currentIndex+"] = " + foodList[currentIndex].getFoodItem()) ;
             Log.v("addToFoodList", "fooditem to be added: "+foodItem.getFoodItem());
-            foodList[currentIndex] = temp;
+            foodList[currentIndex].copyFood(foodItem); //= temp;
             Log.v("addToFoodList","foodList["+currentIndex+"] is now " + foodList[currentIndex].getFoodItem());
             currentIndex = currentIndex + 1;
             return true;
