@@ -24,6 +24,9 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
+import java.util.LinkedList;
 
 
 /**
@@ -46,6 +49,12 @@ public class SearchBarFragment extends Fragment {
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
+
+    String[] displayItems;
+    RestaurantInfo[] restaurantArr;
+    Food[] foodArr;
+
+    String search;
 
     public SearchBarFragment() {
         // Required empty public constructor
@@ -85,7 +94,7 @@ public class SearchBarFragment extends Fragment {
         final Button SearchButton = (Button)  v.findViewById(R.id.SearchButton);
         //final TextView a = new TextView(getContext());
         final ListView restaurantList = (ListView) v.findViewById(R.id.restaurantList);
-        String[] displayItems = databaseReturn();
+        //String[] displayItems = databaseReturn();
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(v.getContext(),
                 android.R.layout.simple_list_item_1, android.R.id.text1);
         //final ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this.getContext(),android.R.layout.two_line_list_item,displayItems);
@@ -118,8 +127,26 @@ public class SearchBarFragment extends Fragment {
             public void onClick(View v) {
                 adapter.clear();
                 String searchString = SearchBar.getText().toString();
+                search = searchString;
+                if (checked) {
+                    foodDatabaseReturn(searchString);
+                    displayItems = new String[foodArr.length];
+                }
+                else{
+                    restaurantDatabaseReturn(searchString);
+                    displayItems = new String[restaurantArr.length];
+                    for(int i = 0; i < displayItems.length; i++){
+                        String restName = restaurantArr[i].getRestName();
+                        String restAddress = restaurantArr[i].getAddress();
+                        displayItems[i] = restName.concat("\n").concat(restAddress);
+                    }
+                }
+
+/*
+                // Get Firebase Database reference
                 FirebaseDatabase database = FirebaseDatabase.getInstance();
                 final DatabaseReference searchRef = database.getReference(searchString);
+
                 restaurantList.setAdapter(adapter);
                 searchRef.addChildEventListener(new ChildEventListener() {
                     @Override
@@ -148,7 +175,7 @@ public class SearchBarFragment extends Fragment {
                     public void onCancelled(DatabaseError databaseError) {
                         Log.w("TAG:", "Failed to read value.");
                     }
-                });
+                });*/
             }
         });
 
@@ -158,7 +185,30 @@ public class SearchBarFragment extends Fragment {
             public  void onItemClick(AdapterView<?> parent,View v,int position, long id){
                 //Object a = restaurantList.getSelectedItem();
                 String a =  (String) parent.getItemAtPosition(position);
+                int location = 0;
+                if (checked){
+                    for(int i = 0; i < foodArr.length; i++){
+                        if(foodArr[i].getFoodItem().equals(a)) {
+                            location = i;
+                            break;
+                        }
+                    }
+                    /* JOE INSERT YOUR FOOD STUFF HERE */
+                }
+                else{
+                    for(int i = 0; i < restaurantArr.length; i++){
+                        if(restaurantArr[i].getRestName().equals(a)){
+                            location = i;
+                            break;
+                        }
+                    }
+                    Intent nextScreen = new Intent(getActivity(), MenuActivity.class);
+                    nextScreen.putExtra("restaurantName", restaurantArr[location].getRestName());
+                    nextScreen.putExtra("restaurantAddress",restaurantArr[location].getAddress());
+                    nextScreen.putExtra("restaurantID",restaurantArr[location].getGoogleID()); //We are going to need to do the menu look up on the MenuActivity as a Menu object can't be passed.
+                    startActivity(nextScreen);
 
+                }
                 Toast.makeText(v.getContext(), a, Toast.LENGTH_SHORT).show();
             }
 
@@ -187,18 +237,99 @@ public class SearchBarFragment extends Fragment {
     }
 
 
+
+/*
     public String[] databaseReturn(){
 
         //Todo: add database query that inserts data into the array
         String[] a  = {"Burger A","Burger B","Burger C","Burger D","Burger E","Burger F","Burger G"};
         return a;
-    }
+    }*/
+
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.onFragmentInteraction(uri);
         }
     }
+
+    public void restaurantDatabaseReturn(final String search){
+        final FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference restaurantTable = db.getReference("restaurantTable");
+
+        restaurantTable.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int numOfTimes = 0;
+                LinkedList<RestaurantInfo> list = new LinkedList<RestaurantInfo>();
+                try {
+                    for (DataSnapshot messageSnapshot : dataSnapshot.getChildren()) {
+                        if (numOfTimes == 10) {
+                            break;
+                        } else {
+                            String name = (String) messageSnapshot.child("restName").getValue();
+                            String ID = (String) messageSnapshot.child("id").getValue();
+                            String address = (String) messageSnapshot.child("address").getValue();
+                            if (name.startsWith(search)) {
+                                RestaurantInfo currRestaurant = new RestaurantInfo();
+                                currRestaurant.setRestName(name);
+                                currRestaurant.setGoogleID(ID);
+                                currRestaurant.setAddress(address);
+
+                                list.add(currRestaurant);
+
+                                numOfTimes++;
+                            }
+                        }
+                    }
+                    restaurantArr = list.toArray(new RestaurantInfo[list.size()]);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }@Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+    public void foodDatabaseReturn(String search){ return;}
+        /*// choice false=rest true=food
+        //Todo: add database query that inserts data into the array
+        final FirebaseDatabase db = FirebaseDatabase.getInstance();
+        DatabaseReference foodTable = db.getReference("foodTable");
+
+        //DatabaseReference foodTable = restaurantTable.child("foodTable");
+        foodTable.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                int numOfTimes = 0;
+                LinkedList<String> list = new LinkedList<String>();
+                try{
+                    for(DataSnapshot messageSnapshot: dataSnapshot.getChildren()){
+                        if (numOfTimes == 10){
+                            break;
+                        }
+                        else{
+                            String name = (String) messageSnapshot.child("name").getValue();
+                            if(name.startsWith(search)){
+                                list.add(name);
+                                numOfTimes++;
+                            }
+                        }
+                    }
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
+                foodArr = list.toArray(new String[list.size()]);
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }*/
 
 //    @Override
 //    public void onAttach(Context context) {

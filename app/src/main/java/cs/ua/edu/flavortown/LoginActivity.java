@@ -93,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
         return password.length() > 4;
     }
 
-    private void attemptLogin(String email, String password) {
+    private void attemptLogin(String email, final String password) {
         //return 1;
         enteredInfo = new User();
         enteredInfo.setEmail(email);
@@ -109,17 +109,17 @@ public class LoginActivity extends AppCompatActivity {
                     //Log.v(LOGTAG, "in onDataChange");
                     for(DataSnapshot messageSnapshot: dataSnapshot.getChildren()) {
                         String emailDB = (String) messageSnapshot.child("email").getValue();
+                        String passwordDB = (String) messageSnapshot.child("password").getValue();
+
                         if (!(enteredInfo.getEmail().equals(emailDB))) {
                             loginValue = 0;
                             break;
                         }
-
-                        String passwordDB = (String) messageSnapshot.child("password").getValue();
-                        if (!enteredInfo.getPassword().equals(passwordDB)) {
+                        else if (!enteredInfo.getPassword().equals(passwordDB)) {
                             loginValue = 1;
                             break;
                         }
-                        else{
+                        else if (enteredInfo.getEmail().equals(emailDB) && enteredInfo.getPassword().equals(passwordDB)){
                             loginValue = 2;
                         }
                     }
