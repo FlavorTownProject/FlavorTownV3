@@ -8,7 +8,13 @@ public class Food {
     private int numOfRating;
     private float ratings[];
     private String iterTag;
+
     private String restKey;
+
+    private String restTag;
+    private String restaurant;
+    private String restID;
+
 
     @SuppressWarnings("unused")
     public Food() {}
@@ -35,7 +41,13 @@ public class Food {
     }
     public float[] getRatings(){return ratings;}
     public String getIterTag() {return iterTag;}
+
     public String getRestKey() {return restKey;}
+
+    public String getRestTag() {return restTag;}
+    public String getRestaurant(){return restaurant;}
+    public String getRestID(){return restID;}
+
 
     public void setFlag(String flag) {
         this.flag = flag;
@@ -59,7 +71,14 @@ public class Food {
 
     public void setIterTag(String iterTag){ this.iterTag = iterTag;}
 
+
     public void setRestKey(String restKey){ this.restKey = restKey;}
+
+    public void setRestTag(String restTag){ this.restTag = restTag;}
+
+    public void setRestaurant(String restaurant){ this.restaurant = restaurant;}
+
+    public void setRestID(String restID){this.restID = restID;}
 
     public boolean calcCurrRating()//set as boolean for debugging and error checking | true = success ; false = failure
     {
