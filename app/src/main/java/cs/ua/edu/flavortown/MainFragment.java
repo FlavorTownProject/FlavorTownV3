@@ -21,6 +21,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.StreamDownloadTask;
 
 import java.util.Collection;
@@ -97,6 +98,8 @@ public class MainFragment extends Fragment {
         historyButton =(Button) v.findViewById(R.id.historyButton);
         moodButton = (Button) v.findViewById(R.id.MoodButton);
 
+        adapter = new ArrayAdapter<>(v.getContext(), android.R.layout.simple_list_item_1, android.R.id.text1);
+
         moodButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
@@ -112,145 +115,30 @@ public class MainFragment extends Fragment {
         //final DatabaseReference myRef = database.getReference("top10");
 
         top10Button.setOnClickListener(new View.OnClickListener() {
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            final DatabaseReference myRef = database.getReference("restaurantTable");
+
             @Override
             public void onClick(View v){
+                FirebaseDatabase database = FirebaseDatabase.getInstance();
+                final DatabaseReference myRef = database.getReference("restaurantTable");
                 String top10query = "a";
-                adapter = new ArrayAdapter<>(v.getContext(),
-                        android.R.layout.simple_list_item_1, android.R.id.text1);
-                mainList.setAdapter(adapter);
-                myRef.addChildEventListener(new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                        String value = dataSnapshot.getValue(String.class);
-                        adapter.add(value);
+                //adapter = new ArrayAdapter<>(v.getContext(),
+                //        android.R.layout.simple_list_item_1, android.R.id.text1);
+               // mainList.setAdapter(adapter);
+                myRef.addValueEventListener(new ValueEventListener() {
+
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+                        //String value = dataSnapshot.getValue(String.class);
+                        //adapter.add(value);
 
                         String restID, restKey,restName;
                         Food tempFood;
                         int mLength = 0;
+                        //FoodStack foodStack = new FoodStack();
+                        Food[] foodList = new Food[100];
+                        int currentIndex = 0;
+                        for(int x = 0 ; x < 100; x++)
+                            foodList[x] = new Food();
 
-                        List<Food> FoodList = new List<Food>() {
-                            @Override
-                            public int size() {
-                                return 0;
-                            }
-
-                            @Override
-                            public boolean isEmpty() {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean contains(Object o) {
-                                return false;
-                            }
-
-                            @NonNull
-                            @Override
-                            public Iterator<Food> iterator() {
-                                return null;
-                            }
-
-                            @NonNull
-                            @Override
-                            public Object[] toArray() {
-                                return new Object[0];
-                            }
-
-                            @NonNull
-                            @Override
-                            public <T> T[] toArray(T[] ts) {
-                                return null;
-                            }
-
-                            @Override
-                            public boolean add(Food food) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean remove(Object o) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean containsAll(Collection<?> collection) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean addAll(Collection<? extends Food> collection) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean addAll(int i, Collection<? extends Food> collection) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean removeAll(Collection<?> collection) {
-                                return false;
-                            }
-
-                            @Override
-                            public boolean retainAll(Collection<?> collection) {
-                                return false;
-                            }
-
-                            @Override
-                            public void clear() {
-
-                            }
-
-                            @Override
-                            public Food get(int i) {
-                                return null;
-                            }
-
-                            @Override
-                            public Food set(int i, Food food) {
-                                return null;
-                            }
-
-                            @Override
-                            public void add(int i, Food food) {
-
-                            }
-
-                            @Override
-                            public Food remove(int i) {
-                                return null;
-                            }
-
-                            @Override
-                            public int indexOf(Object o) {
-                                return 0;
-                            }
-
-                            @Override
-                            public int lastIndexOf(Object o) {
-                                return 0;
-                            }
-
-                            @Override
-                            public ListIterator<Food> listIterator() {
-                                return null;
-                            }
-
-                            @NonNull
-                            @Override
-                            public ListIterator<Food> listIterator(int i) {
-                                return null;
-                            }
-
-                            @NonNull
-                            @Override
-                            public List<Food> subList(int i, int i1) {
-                                return null;
-                            }
-                        };
                         String foodIter;
                         try {
                             Log.v(LOGTAG, "in onDataChange");
@@ -260,18 +148,22 @@ public class MainFragment extends Fragment {
                                 Log.v(LOGTAG, "name = " + restName);
                                 restID = (String) messageSnapshot.child("id").getValue();
                                 Log.v(LOGTAG, "id = " + restID);
+                                mLength =  messageSnapshot.child("menuLength").getValue(int.class);
                                 for (int x = 0; x < mLength; x++) {
                                     tempFood = new Food();
                                     tempFood.setRestKey(restKey);
                                     foodIter = stringIncrementer("food", x);
                                     tempFood.setFoodItem(messageSnapshot.child("menu").child(foodIter).child("name").getValue(String.class));
-                                    tempFood.setNumOfRating(messageSnapshot.child("menu").child(foodIter).child("numOfRatings").getValue(int.class));
+                                    Log.v(LOGTAG, "foodItem" + tempFood.getFoodItem());
+                                    tempFood.setNumOfRating(messageSnapshot.child("menu").child(foodIter).child("numOfRating").getValue(int.class));
                                     if (tempFood.getNumOfRating() > 0) {
                                         Log.v(LOGTAG, "Getting ratings");
                                         float tempRate[] = new float[tempFood.getNumOfRating()];
-                                        for (int y = 0; y < tempRate.length; y++) {
-                                            tempRate[y] = messageSnapshot.child("menu").child(foodIter).child("rating").child(String.valueOf(y)).getValue(float.class);
+                                        int y =0;
+                                        for (DataSnapshot ratings: messageSnapshot.child("menu").child(foodIter).child("rating").getChildren()){ //int y = 0; y < tempRate.length; y++) {
+                                            tempRate[y] = ratings.getValue(float.class); //tempRate[y] = messageSnapshot.child("menu").child(foodIter).child("rating").child(String.valueOf(y)).getValue(float.class);
                                             Log.v(LOGTAG, "Rating " + String.valueOf(y) + " = " + String.valueOf(tempRate[y]));
+                                            y++;
                                         }
                                         tempFood.setRatings(tempRate);
                                         Log.v(LOGTAG, "Set ratings (may need double check)");
@@ -287,21 +179,46 @@ public class MainFragment extends Fragment {
                                     tempFood.setIterTag(foodIter);
                                     Log.v(LOGTAG, "flag = " + tempFood.getFlag());
                                     Log.v(LOGTAG, "adding food to menu");
-                                    FoodList.add(tempFood); //currMenu.addToFoodList(temp);
+                                    foodList[currentIndex].copyFood(tempFood); //currMenu.addToFoodList(temp);
+                                    currentIndex++;
                                 }
                             }
                             //Lists are filled, commence calculations
 
-                            Iterator<Food> foodIterator = FoodList.iterator();
 
 
+                            tempFood = new Food();
                             Food topTenFood[] = new Food[10];
-                            Food bump1 = new Food();
-                            Food bump2 = new Food();
-                            int pulled = 0;
-                            while(foodIterator.hasNext())
+                            Food highestItem = new Food();//Food bump1 = new Food();
+                            //Food bump2 = new Food();
+                            int usedIndices[] = new int[10];//int pulled = 0;
+                            for(int x = 0; x < 10; x++) {
+                                topTenFood[x] = new Food();
+                                usedIndices[x] = -1;
+                            }
+                            int indexFound = 0;
+
+                            for(int x = 0; x < 10 ; x++) {
+                                highestItem = new Food();//Food bump1 = new Food();
+                                    for(int y = 0; y < currentIndex; y++) {
+                                        if((highestItem == null || highestItem.getCurrRating() < foodList[y].getCurrRating() )&& !usedIndex(usedIndices,y)) {
+                                            indexFound = y;
+                                            highestItem.copyFood(foodList[y]);
+                                        }
+                                        else if(highestItem.getCurrRating() < foodList[y].getCurrRating() && foodList[y].getNumOfRating() > highestItem.getNumOfRating() && !usedIndex(usedIndices,y)){
+                                            indexFound = y;
+                                            highestItem.copyFood(foodList[y]);
+                                        }
+                                    }
+                                usedIndices[x] = indexFound;
+                                topTenFood[x].copyFood(highestItem);
+                            }
+
+                            /*
+                            for(int i = 0 ; i < currentIndex; i++)
                             {
-                                tempFood = foodIterator.next();
+                                Log.v(LOGTAG, "tempFood.Fooditem = " +tempFood.getFoodItem());
+                                tempFood.copyFood(foodList[i]);
                                 if(pulled < 10)
                                 {
                                     topTenFood[pulled] = tempFood;
@@ -326,11 +243,12 @@ public class MainFragment extends Fragment {
                                             }
                                             break;
                                         }
+                                        /*
                                         else if ( x ==  9 && tempFood.getCurrRating() >= topTenFood[x].getCurrRating())
                                         {
                                             bump1.copyFood(topTenFood[x]);
                                             topTenFood[x].copyFood(tempFood);
-                                            for(int y = x - 1; y >= 0; y--)
+                                            for(int y = x - 2; y >= 0; y--)
                                             {
                                                 bump2.copyFood(topTenFood[y]);
                                                 topTenFood[y].copyFood(bump1);
@@ -339,30 +257,24 @@ public class MainFragment extends Fragment {
                                             break;
                                         }
                                     }
+                                    //logPrintArray(topTenFood);
                                 }
                             }//end of while iter.hasNext()
 
+                            */
+                            String topTenNames[] = new String[10];
+                            for(int x = 0 ; x < 10 ; x++)
+                            {
+                                Log.v(LOGTAG, "topTenFood["+String.valueOf(x)+"].name = "+topTenFood[x].getFoodItem() );
+                                adapter.add(topTenFood[x].getFoodItem()); //topTenNames[x] = topTenFood[x].getFoodItem();
+                            }
+
+                            mainList.setAdapter(adapter);
 
                         }
                         catch( Exception e){
                             e.printStackTrace();
                         }
-
-                    }
-
-                    @Override
-                    public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                        String value = dataSnapshot.getValue(String.class);
-                        adapter.remove(value);
-                    }
-
-                    @Override
-                    public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-                    }
-
-                    @Override
-                    public void onChildMoved(DataSnapshot dataSnapshot, String s) {
 
                     }
 
@@ -461,5 +373,24 @@ public class MainFragment extends Fragment {
                 }
             }
         }
+        logPrintArray(top);
     }
+    private void logPrintArray(Food[] top)
+    {
+        for(int x = 0 ; x < 10; x++) {
+            Log.v("MainFragment", "topTen[" + String.valueOf(x) + "].name = " + top[x].getFoodItem());
+            Log.v("MainFragment", "topTen[" + String.valueOf(x) + "].currRate = " + top[x].getCurrRating());
+        }
+
+    }
+    private boolean usedIndex(int[] array , int value)
+    {
+        for(int x = 0 ; x < array.length ; x++)
+        {
+            if(array[x] == value)
+                return true;
+        }
+        return  false;
+    }
+
 }

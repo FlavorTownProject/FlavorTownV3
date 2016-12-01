@@ -73,7 +73,7 @@ public class MenuActivity extends AppCompatActivity {
                         Log.v(LOGTAG,"id = "+ ID);
                         if(ID.equals(currentRestuarant.getGoogleID())) {
                             currentRestuarant.setDbKey(messageSnapshot.getKey());
-                            Log.v(LOGTAG, "currentRestuarantDBKey = " +currentRestuarant.getDbKey());
+                            Log.v(LOGTAG, "currentRestaurantDBKey = " +currentRestuarant.getDbKey());
                             Log.v(LOGTAG, messageSnapshot.getValue().toString());
                             Log.v(LOGTAG, "menuLength = "+ String.valueOf(messageSnapshot.child("menuLength").getValue(int.class)));
                             Menu currMenu = new Menu(messageSnapshot.child("menuLength").getValue(int.class));
