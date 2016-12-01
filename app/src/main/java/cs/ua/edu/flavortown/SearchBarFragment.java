@@ -26,6 +26,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import junit.framework.Assert;
+
 import java.util.LinkedList;
 
 
@@ -121,8 +123,6 @@ public class SearchBarFragment extends Fragment {
                         Toast.makeText(v.getContext(), "Selected button  " + rb.getText(),  Toast.LENGTH_SHORT).show();
                         break;
                 }
-
-
             }
         });
 
@@ -137,6 +137,7 @@ public class SearchBarFragment extends Fragment {
                     //Pass a into Food Fragment
                     //Intent foodActivity = new Intent(getActivity(), FoodActivity.class);
                     Intent foodScreen = new Intent(getActivity(), FoodActivity.class);
+                    //Log.e("TESTINGTHINGS", foodArr[position].getFoodItem());
                     foodScreen.putExtra("foodName", foodArr[position].getFoodItem());
                     foodScreen.putExtra("foodIterator",foodArr[position].getIterTag());
                     foodScreen.putExtra("foodCurrRating", foodArr[position].getCurrRating());

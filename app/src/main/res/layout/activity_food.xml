@@ -10,23 +10,14 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="cs.ua.edu.flavortown.FoodActivity">
 
-    <RatingBar
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="31dp"
-        android:id="@+id/barFoodRatingBar"
-        android:layout_below="@+id/txtFoodName"
-        android:layout_centerHorizontal="true" />
-
     <Button
-        android:text="Submit"
+        android:text="Rate Food"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/buttonFoodRate"
         android:layout_marginTop="34dp"
         android:layout_below="@+id/linearLayout1"
-        android:layout_centerHorizontal="true"
-        tools:text="RATE" />
+        android:layout_centerHorizontal="true" />
 
     <LinearLayout
         android:id="@+id/linearLayout1"
@@ -35,14 +26,6 @@
         android:layout_marginTop="27dp"
         android:layout_below="@+id/barFoodRatingBar"
         android:layout_alignEnd="@+id/buttonFoodRate">
-
-        <TextView
-            android:id="@+id/lblResult"
-            android:layout_width="121dp"
-            android:layout_height="wrap_content"
-            android:text="Rating : "
-            android:textAppearance="?android:attr/textAppearanceLarge"
-            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/txtFoodRatingValue"
@@ -71,5 +54,22 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="53dp"
         android:id="@+id/listComments" />
+
+    <RatingBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="25dp"
+        android:id="@+id/barFoodRatingBar"
+        android:layout_below="@+id/txtFoodName"
+        android:layout_centerHorizontal="true" />
+
+    <TextView
+        android:id="@+id/lblResult"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rating : "
+        android:layout_alignTop="@+id/linearLayout1"
+        android:layout_alignStart="@+id/barFoodRatingBar"
+        android:textSize="24sp" />
 
 </RelativeLayout>

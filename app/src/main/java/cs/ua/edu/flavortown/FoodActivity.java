@@ -25,6 +25,7 @@ public class FoodActivity extends AppCompatActivity {
     String queryName;
     //String queryName = "chat";
 
+    String foodName; //From Opening From List
     TextView mFoodName;
     RatingBar mFoodRatingBar;
     TextView mFoodRatingValue;
@@ -43,6 +44,8 @@ public class FoodActivity extends AppCompatActivity {
         final Bundle extras = getIntent().getExtras();
         restKey = extras.getString("restaurantKey");
         foodKey = extras.getString("foodIterator");
+        Log.v("FoodActivity","foodkey is null :"+ String.valueOf(foodKey == null));
+        foodName = extras.getString("restaurantName");
         queryName = "restaurantTable/" + restKey + "/menu/" + foodKey;
 
         mFoodName = (TextView) findViewById(R.id.txtFoodName);
@@ -64,14 +67,23 @@ public class FoodActivity extends AppCompatActivity {
         mFoodButtonRate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.v("FoodActivity", "Rate Button Pressed");
-                //Intent foodScreen = new Intent(getBaseContext(), RatingActivity.class);
+                //Log.v("FoodActivity", "Rate Button Pressed");
+                //Log.v("FoodStuff", foodName);
+                //Log.v("FoodStuff", foodKey);
+                //Log.v("FoodStuff", Float.toString(extras.getFloat("foodCurrRating")));
+                //Log.v("FoodStuff", Float.toString(extras.getInt("foodNumOfRatings")));
+                //Log.v("FoodStuff", restKey);
 
-                //startActivity(foodScreen);
+                Intent rateScreen = new Intent(getBaseContext(), RatingActivity.class);
+                    rateScreen.putExtra("foodName", foodName);
+                    rateScreen.putExtra("foodIterator", foodKey);
+                    rateScreen.putExtra("foodCurrRating", extras.getFloat("foodCurrRating"));
+                    rateScreen.putExtra("foodNumOfRatings", extras.getInt("foodNumOfRatings"));
+                    rateScreen.putExtra("restaurantKey", restKey);
+                    rateScreen.putExtra("foodRatings", extras.getString("foodRatings"));
+                    rateScreen.putExtra("restaurantID", extras.getString("restaurantID"));
+                startActivity(rateScreen);
             }
         });
-
-
     }
-
 }

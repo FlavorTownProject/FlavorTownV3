@@ -108,7 +108,9 @@ public class MenuActivity extends AppCompatActivity {
                                     temp.setCurrRating(0);
                                 }
                                 temp.setFlag((String) messageSnapshot.child("menu").child(tagIter).child("flag").getValue());
+                                Log.v(LOGTAG, "tagIter = "+ tagIter);
                                 temp.setIterTag(tagIter);
+                                Log.v(LOGTAG, "temp.setItertag = " + temp.getIterTag());
                                 Log.v(LOGTAG, "flag = "+ temp.getFlag());
                                 Log.v(LOGTAG, "adding food to menu");
                                 currMenu.addToFoodList(temp);
@@ -223,6 +225,7 @@ public class MenuActivity extends AppCompatActivity {
             Intent foodScreen = new Intent(this, FoodActivity.class);
             foodScreen.putExtra("foodName", foodList[position].getFoodItem());
             foodScreen.putExtra("foodIterator",foodList[position].getIterTag());
+            Log.v(LOGTAG, "foodIter (openFood) = "+foodList[position].getIterTag());
             foodScreen.putExtra("foodCurrRating", foodList[position].getCurrRating());
             foodScreen.putExtra("foodNumOfRatings", foodList[position].getNumOfRating());
             foodScreen.putExtra("foodRatings", foodList[position].getRatings());
