@@ -42,7 +42,7 @@ public class SearchBarFragment extends Fragment {
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    private boolean checked; //false = restaurant true = food
+    private boolean checked = false; //false = restaurant true = food
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -139,6 +139,7 @@ public class SearchBarFragment extends Fragment {
                         String restName = restaurantArr[i].getRestName();
                         String restAddress = restaurantArr[i].getAddress();
                         displayItems[i] = restName.concat("\n").concat(restAddress);
+                        adapter.add(displayItems[i]);
                     }
                 }
 
@@ -270,7 +271,8 @@ public class SearchBarFragment extends Fragment {
                             String name = (String) messageSnapshot.child("restName").getValue();
                             String ID = (String) messageSnapshot.child("id").getValue();
                             String address = (String) messageSnapshot.child("address").getValue();
-                            if (name.startsWith(search)) {
+
+                            if (name.toLowerCase().startsWith(search.toLowerCase())) {
                                 RestaurantInfo currRestaurant = new RestaurantInfo();
                                 currRestaurant.setRestName(name);
                                 currRestaurant.setGoogleID(ID);
