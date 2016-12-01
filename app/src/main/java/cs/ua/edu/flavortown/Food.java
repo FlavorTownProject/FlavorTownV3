@@ -65,4 +65,12 @@ public class Food {
         else
             return false;
     }
+    public void copyFood(Food copyItem)
+    {
+        this.flag = copyItem.getFlag();
+        this.foodItem = copyItem.getFoodItem();
+        this.numOfRating = copyItem.getNumOfRating();
+        this.ratings = copyItem.getRatings();
+        this.currRating = copyItem.getCurrRating();
+    }
 }

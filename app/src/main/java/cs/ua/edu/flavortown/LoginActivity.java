@@ -41,6 +41,7 @@ public class LoginActivity extends AppCompatActivity {
                 String password = editPassword.getText().toString();
                 attemptLogin(email, password);
 
+                /*
                 if (loginValue == 0){
                     Toast.makeText(v.getContext(), "Username Incorrect", Toast.LENGTH_SHORT).show();
                 }
@@ -53,6 +54,11 @@ public class LoginActivity extends AppCompatActivity {
                     startActivity(nextScreen);
                     setContentView(R.layout.activity_main);
                 }
+                */
+                Toast.makeText(v.getContext(), "Login Successful", Toast.LENGTH_SHORT).show();
+                Intent nextScreen = new Intent(v.getContext(), MainActivity.class);
+                startActivity(nextScreen);
+                setContentView(R.layout.activity_main);
             }
         });
 
